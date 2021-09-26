@@ -1,1 +1,66 @@
-hier ist dann ein feld zum sachen eingeben oder so
+<script type="text/javascript">
+    function get_video_ids() {
+        fetch("/video_ids/" + document.getElementById("url-field").value)
+            .then(function (response) {
+                return response.json()
+            }).then(function (json) {
+            alert(JSON.stringify(json))
+        })
+    }
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/fetch
+</script>
+
+
+<!------------- as asdasd asd a sd -------------->
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Playlist analyzer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=DotGothic16&effect=neon|outline|emboss|shadow-multiple|anaglyph">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Oswald&effect=neon|outline|emboss|shadow-multiple|anaglyph">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(90deg, rgb(0, 0, 0), rgb(64, 4, 4));
+        }
+
+        h1 {
+            font-family: 'DotGothic16';
+            font-size: 2em;
+            color: black;
+        }
+
+        h2 {
+            font-family: 'Oswald';
+            font-size: 4.4em;
+            color: rgb(110, 13, 13);
+            text-shadow: 3px 3px rgb(0, 0, 0);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-1 pt-3">
+            <i class="material-icons" style="font-size:72px;color:rgb(110, 13, 13);">video_library</i>
+        </div>
+        <div class="col-sm-11 pt-2">
+            <h2>YouTube Playlist Analyzer</h2>
+        </div>
+    </div>
+
+    <input type="text" id="url-field"/>
+    <button onclick="get_video_ids();">submit</button>
+</div>
+</body>
+</html>
