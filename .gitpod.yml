@@ -1,0 +1,14 @@
+tasks:
+  - init: pyenv install && pip install -r requirements-test.txt && mv ~/.pyenv /workspace/
+    command: cp -r /workspace/.pyenv ~/ 2>/dev/null || exit
+
+github:
+  prebuilds:
+    master: true
+    branches: true
+    pullRequests: true
+    pullRequestsFromForks: true
+    addCheck: true
+    addComment: false
+    addBadge: true
+    addLabel: false
