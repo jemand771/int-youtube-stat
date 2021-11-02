@@ -1,8 +1,36 @@
 from dataclasses import dataclass
+import functools
 import os
+import shelve
+import time
 import urllib.parse
 
 import pyyoutube
+
+
+# TODO make this configurable via env variables?
+SHELVE_FILE = ".cache.shelve"
+CACHE_TIME = 10
+
+
+def cached(func):
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        # this is hacky but.. don't @ me
+        cache_key = str((func.__name__, args, tuple(kwargs.items())))
+        with shelve.open(SHELVE_FILE) as cache:
+            cache_obj = cache.get(cache_key)
+            if cache_obj:
+                if cache_obj["time"] + CACHE_TIME > time.time():
+                    return cache_obj["value"]
+                cache.pop(cache_key)
+            val = func(self, *args, **kwargs)
+            cache[cache_key] = {
+                "time": int(time.time()),
+                "value": val
+            }
+            return val
+    return wrapper
 
 
 class InvalidLinkFormatException(ValueError):
@@ -52,6 +80,7 @@ class YouTubeApi:
                     return self._video_ids_from_playlist_id(query.get("list"))
         raise InvalidLinkFormatException("meh")
 
+    @cached
     def get_video_data(self, video_id: str) -> YouTubeVideo:
         video = self.api.get_video_by_id(video_id=video_id).items[0]
         # get all possible thumbnail variants
