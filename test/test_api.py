@@ -2,7 +2,7 @@ import unittest
 from api_helper import YouTubeApi, InvalidLinkFormatException
 
 
-class YtApiTest(unittest.TestCase):
+class TestYtApiHelper(unittest.TestCase):
     TEST_PLAYLIST = 'https://www.youtube.com/playlist?list=PLRktPAG0Z4OYxnRWDJphPh11euBWSMucb'
 
     def setUp(self) -> None:
