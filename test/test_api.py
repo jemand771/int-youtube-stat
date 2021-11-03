@@ -7,6 +7,10 @@ class TestYtApiHelper(unittest.TestCase):
 
     def setUp(self) -> None:
         self.api = YouTubeApi()
+    
+    def tearDown(self) -> None:
+        # fix ResourceWarning from unittest x open requests session
+        self.api.api.session.close()
 
     def test_get_video_via_multiple_success(self):
         rick_roll_data = self.api.get_video_data_multi(['dQw4w9WgXcQ'])
