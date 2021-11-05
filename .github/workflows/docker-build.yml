@@ -27,7 +27,7 @@ jobs:
           tags: |
             type=ref,event=pr,prefix=pr-
             type=ref,event=branch,prefix=br-
-            trype=ref,event=tag,prefix=tag-
+            type=ref,event=tag,prefix=tag-
             type=sha,prefix=sha-,fromat=long
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
