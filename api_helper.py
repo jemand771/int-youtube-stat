@@ -22,7 +22,8 @@ class YouTubeVideo:
 
 @dataclass
 class YouTubeStatistics:
-    pass
+    total_count: int
+    total_duration: int
 
 
 def cached(func):
@@ -100,7 +101,11 @@ class YouTubeApi:
         return [self.get_video_data(video_id) for video_id in video_ids]
 
     def get_stats(self, video_ids: list[str]) -> YouTubeStatistics:
-        pass  # TODO implement statistics accumulator
+        videos = [self.get_video_data(video_id) for video_id in video_ids]
+        return YouTubeStatistics(
+            total_count=len(videos),
+            total_duration=sum(video.duration for video in videos)
+        )
 
 
 # TODO remove this part again

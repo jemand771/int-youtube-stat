@@ -30,11 +30,12 @@ def get_video_info(video_id: str):
 # POST video_ids als json-array
 # z.B. ["foo", "bar", "asasdasdasd"]
 @app.post("/stats")
-def get_stats_from_video_ids() -> str:
+def get_stats_from_video_ids() -> Response:
     if not isinstance(request.json, list):
         abort(400, "request body needs to be of type list")
-    # TODO calculate stats
-    return ""
+    if not all(type(x) == str for x in request.json):
+        abort(400)
+    return jsonify(api.get_stats(request.json))
 
 
 if __name__ == "__main__":
