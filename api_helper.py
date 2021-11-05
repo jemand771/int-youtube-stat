@@ -47,6 +47,7 @@ def cached(func):
                 "value": val
             }
             return val
+
     return wrapper
 
 
