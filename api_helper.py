@@ -51,7 +51,7 @@ def cached(func):
 
 class YouTubeApi:
 
-    def __init__(self, api_key=None, use_cache=True, cache_file=".cache.shelve", cache_time=10):
+    def __init__(self, api_key=None, use_cache=True, cache_file=".cache.shelve", cache_time=900):
         if api_key:
             self.api = pyyoutube.Api(api_key=api_key)
         self.cache_config = {
