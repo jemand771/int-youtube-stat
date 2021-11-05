@@ -10,6 +10,10 @@ api = YouTubeApi()
 def home_page() -> str:
     return render_template("home.html")
 
+@app.get("/entwurf")
+def entwurf() -> str:
+    return render_template("entwurf_fuer_int.html")
+
 
 @app.get("/video_ids/<path:url>")
 def get_video_ids(url) -> Response:
