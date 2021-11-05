@@ -45,17 +45,17 @@
         }
 
         html {
-        {# wollen wir das wirklich? #} scrollbar-color: #851010 #530505;
+        	scrollbar-color: #851010 #530505;
             scrollbar-width: thin
         }
 
         .statistic {
-            background-color: rgb(48, 8, 8);
-            margin-left: 48px;
-            color: rgb(110, 13, 13)
+            background-color: rgb(64, 4, 4);
+            color: rgb(110, 13, 13);
+            text-align: left;
         }
 
-        span:hover {
+        .span-custom:hover {
             background-image: linear-gradient(to right, orange, yellow, green, cyan, blue, violet)
         }
     </style>
@@ -70,8 +70,8 @@
     </div>
 </div>
 
-<div class="container-fluid"
-     style="background-color: rgb(64, 4, 4); padding-top: 24px; height: 100px; margin-top: 20px">
+<div class="container-fluid sticky-top"
+     style="background-color: rgb(64, 4, 4); padding-top: 24px; margin-top: 20px">
     <form class="d-flex" style="text-align: center" action="">
         <div class="container-fluid row">
             <div class="col">
@@ -91,24 +91,25 @@
                 </div>
             </div>
             <div class="col-1">
-                <button class="btn btn-custom" type="submit"><span>Submit</span></button>
+                <button class="btn btn-custom" type="submit"><span class="span-custom">Submit</span></button>
+            </div>
+            <div class="row">
+                <div class="col" style="text-align: left;">
+                        <p>
+                            Statistiken:<br>
+                            Gesamtlänge:<br>
+                            Durchschnittliche Länge:<br>
+                            Durchschnittliche Views:<br>
+                            Durchschnittliche Likes:<br>
+                            ...
+                        </p>
+                </div>
             </div>
         </div>
     </form>
 </div>
-<br>
-<div class="container-fluid statistic w-50">
-    <form class="d-flex">
-        <p>
-            Statistiken:<br>
-            Gesamtlänge:<br>
-            Durchschnittliche Länge:<br>
-            Durchschnittliche Views:<br>
-            Durchschnittliche Likes:<br>
-            ...
-        </p>
-    </form>
 </div>
+<br>
 <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
     magna aliquyam erat, sed diam voluptua. At vero eos et
     accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
