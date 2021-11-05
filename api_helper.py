@@ -107,5 +107,6 @@ class YouTubeApi:
 if __name__ == "__main__":
     print("hello world")
     api = YouTubeApi(os.environ.get("YOUTUBE_API_KEY"))
-    # print(api.get_video_ids_from_link("https://www.youtube.com/playlist?list=PLRktPAG0Z4OYxnRWDJphPh11euBWSMucb"))
-    print(api.get_video_data("QQrfPbDkIoE"))
+    ids = api.get_video_ids_from_link("https://www.youtube.com/playlist?list=PLRktPAG0Z4OYxnRWDJphPh11euBWSMucb")
+    for video_id_ in ids:
+        print(api.get_video_data(video_id_))
