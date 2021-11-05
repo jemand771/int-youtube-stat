@@ -27,6 +27,10 @@ def validate_video_list(func):
 def home_page() -> str:
     return render_template("entwurf_fuer_int.html")
 
+@app.get("/entwurf")
+def entwurf() -> str:
+    return render_template("entwurf_fuer_int.html")
+
 
 @app.get("/video_data/<path:url>")
 def get_video_data_multi(url) -> Response:
