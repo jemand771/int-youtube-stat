@@ -30,28 +30,27 @@ class YouTubeStatistics:
     pass
 
 
+def cached(func):
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        # this is hacky but.. don't @ me
+        cache_key = str((func.__name__, args, tuple(kwargs.items())))
+        with shelve.open(SHELVE_FILE) as cache:
+            cache_obj = cache.get(cache_key)
+            if cache_obj:
+                if cache_obj["time"] + CACHE_TIME > time.time():
+                    return cache_obj["value"]
+                cache.pop(cache_key)
+            val = func(self, *args, **kwargs)
+            cache[cache_key] = {
+                "time": int(time.time()),
+                "value": val
+            }
+            return val
+    return wrapper
+
+
 class YouTubeApi:
-
-    def cached(func):
-        @functools.wraps(func)
-        def wrapper(self, *args, **kwargs):
-            # this is hacky but.. don't @ me
-            cache_key = str((func.__name__, args, tuple(kwargs.items())))
-            with shelve.open(SHELVE_FILE) as cache:
-                cache_obj = cache.get(cache_key)
-                if cache_obj:
-                    if cache_obj["time"] + CACHE_TIME > time.time():
-                        return cache_obj["value"]
-                    cache.pop(cache_key)
-                val = func(self, *args, **kwargs)
-                cache[cache_key] = {
-                    "time": int(time.time()),
-                    "value": val
-                }
-                return val
-        return wrapper
-
-    # TODO implement local caching, use locking (!)
 
     def __init__(self):
         self.api = pyyoutube.Api(api_key=os.environ.get("YOUTUBE_API_KEY"))
