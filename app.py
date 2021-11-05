@@ -1,9 +1,11 @@
+import os
+
 from flask import abort, Flask, jsonify, request, render_template, Response
 
 from api_helper import YouTubeApi
 
 app: Flask = Flask(__name__)
-api = YouTubeApi()
+api = YouTubeApi(os.environ.get("YOUTUBE_API_KEY"))
 
 
 @app.get("/")

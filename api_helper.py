@@ -1,6 +1,6 @@
+import os
 from dataclasses import dataclass
 import functools
-import os
 import shelve
 import time
 import urllib.parse
@@ -32,16 +32,19 @@ class YouTubeStatistics:
 
 def cached(func):
     @functools.wraps(func)
-    def wrapper(self, *args, **kwargs):
+    def wrapper(*args, **kwargs):
+        # args[0] will be self for decorated instance methods
+        if not args[0].use_cache:
+            return func(*args, **kwargs)
         # this is hacky but.. don't @ me
-        cache_key = str((func.__name__, args, tuple(kwargs.items())))
+        cache_key = str((func.__name__, args[1:], tuple(kwargs.items())))
         with shelve.open(SHELVE_FILE) as cache:
             cache_obj = cache.get(cache_key)
             if cache_obj:
                 if cache_obj["time"] + CACHE_TIME > time.time():
                     return cache_obj["value"]
                 cache.pop(cache_key)
-            val = func(self, *args, **kwargs)
+            val = func(*args, **kwargs)
             cache[cache_key] = {
                 "time": int(time.time()),
                 "value": val
@@ -52,9 +55,10 @@ def cached(func):
 
 class YouTubeApi:
 
-    def __init__(self):
-        self.api = pyyoutube.Api(api_key=os.environ.get("YOUTUBE_API_KEY"))
-        # TODO add a flag or env var 
+    def __init__(self, api_key=None, use_cache=True):
+        if api_key:
+            self.api = pyyoutube.Api(api_key=api_key)
+        self.use_cache = use_cache
 
     def _video_ids_from_playlist_id(self, playlist_id: str) -> list[str]:
         return [
@@ -103,6 +107,6 @@ class YouTubeApi:
 # TODO remove this part again
 if __name__ == "__main__":
     print("hello world")
-    api = YouTubeApi()
+    api = YouTubeApi(os.environ.get("YOUTUBE_API_KEY"))
     # print(api.get_video_ids_from_link("https://www.youtube.com/playlist?list=PLRktPAG0Z4OYxnRWDJphPh11euBWSMucb"))
     print(api.get_video_data("QQrfPbDkIoE"))
