@@ -8,11 +8,6 @@ import urllib.parse
 import pyyoutube
 
 
-# TODO make this configurable via env variables?
-SHELVE_FILE = ".cache.shelve"
-CACHE_TIME = 10
-
-
 class InvalidLinkFormatException(ValueError):
     pass
 
@@ -34,14 +29,15 @@ def cached(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         # args[0] will be self for decorated instance methods
-        if not args[0].use_cache:
+        cache_config = args[0].cache_config
+        if not cache_config:
             return func(*args, **kwargs)
         # this is hacky but.. don't @ me
         cache_key = str((func.__name__, args[1:], tuple(kwargs.items())))
-        with shelve.open(SHELVE_FILE) as cache:
+        with shelve.open(cache_config["file"]) as cache:
             cache_obj = cache.get(cache_key)
             if cache_obj:
-                if cache_obj["time"] + CACHE_TIME > time.time():
+                if cache_obj["time"] + cache_config["time"] > time.time():
                     return cache_obj["value"]
                 cache.pop(cache_key)
             val = func(*args, **kwargs)
@@ -55,10 +51,13 @@ def cached(func):
 
 class YouTubeApi:
 
-    def __init__(self, api_key=None, use_cache=True):
+    def __init__(self, api_key=None, use_cache=True, cache_file=".cache.shelve", cache_time=10):
         if api_key:
             self.api = pyyoutube.Api(api_key=api_key)
-        self.use_cache = use_cache
+        self.cache_config = {
+            "file": cache_file,
+            "time": cache_time
+        } if use_cache else None
 
     def _video_ids_from_playlist_id(self, playlist_id: str) -> list[str]:
         return [
