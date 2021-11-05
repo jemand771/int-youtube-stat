@@ -23,7 +23,7 @@ def get_video_ids(url) -> Response:
 
 
 @app.get("/video_info/<video_id>")
-def get_video_info(video_id: str):
+def get_video_info(video_id: str) -> Response:
     return jsonify(api.get_video_data(video_id))
 
 
