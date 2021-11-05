@@ -40,6 +40,12 @@ def get_video_info(video_id: str) -> Response:
     return jsonify(api.get_video_data(video_id))
 
 
+@validate_video_list
+@app.post("/video_info")
+def get_multi_video_info() -> Response:
+    return jsonify([api.get_video_data(video_id) for video_id in request.json])
+
+
 # POST video_ids als json-array
 # z.B. ["foo", "bar", "asasdasdasd"]
 @validate_video_list
