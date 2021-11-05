@@ -1,3 +1,4 @@
+import functools
 import os
 
 from flask import abort, Flask, jsonify, request, render_template, Response
@@ -6,6 +7,18 @@ from api_helper import YouTubeApi
 
 app: Flask = Flask(__name__)
 api = YouTubeApi(os.environ.get("YOUTUBE_API_KEY"))
+
+
+def validate_video_list(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        if not isinstance(request.json, list):
+            abort(400, "request body needs to be of type list")
+        if not all(type(x) == str for x in request.json):
+            abort(400)
+        return func(*args, **kwargs)
+
+    return wrapper
 
 
 @app.get("/")
@@ -29,12 +42,9 @@ def get_video_info(video_id: str) -> Response:
 
 # POST video_ids als json-array
 # z.B. ["foo", "bar", "asasdasdasd"]
+@validate_video_list
 @app.post("/stats")
 def get_stats_from_video_ids() -> Response:
-    if not isinstance(request.json, list):
-        abort(400, "request body needs to be of type list")
-    if not all(type(x) == str for x in request.json):
-        abort(400)
     return jsonify(api.get_stats(request.json))
 
 
