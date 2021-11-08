@@ -61,6 +61,27 @@ class YouTubeApi:
             "time": cache_time
         } if use_cache else None
 
+    def get_video_data_from_url(self, url: str):
+        url_obj = urllib.parse.urlparse(url)
+        # we're using parse_qsl instead of parse_qs because nobody cares about list-encoded query parameters
+        query = dict(urllib.parse.parse_qsl(url_obj.query))
+        if url_obj.netloc == "www.youtube.com" or url_obj.netloc == "youtube.com" or url_obj.netloc == "m.youtube.com":
+            if url_obj.path == "/playlist":
+                if query.get("list"):
+                    return self._get_video_data_multi(self._video_ids_from_playlist_id(query.get("list")))
+            if url_obj.path == "/watch":  # TODO parse playlist IDs in watch links?
+                if query.get("v"):
+                    return [self._get_video_data(query.get("v"))]
+
+        raise InvalidLinkFormatException("meh")
+
+    def get_stats(self, video_ids: list[str]) -> YouTubeStatistics:
+        videos = [self._get_video_data(video_id) for video_id in video_ids]
+        return YouTubeStatistics(
+            total_count=len(videos),
+            total_duration=sum(video.duration for video in videos)
+        )
+
     def _video_ids_from_playlist_id(self, playlist_id: str) -> list[str]:
         return [
             video.contentDetails.videoId
@@ -72,20 +93,8 @@ class YouTubeApi:
             ).items
         ]
 
-    def get_video_ids_from_link(self, url: str) -> list[str]:
-        # TODO more url matching :)
-        #      evtl. auch einfach machbar für colin/franz?
-        url_obj = urllib.parse.urlparse(url)
-        # we're using parse_qsl instead of parse_qs because nobody cares about list-encoded query parameters
-        query = dict(urllib.parse.parse_qsl(url_obj.query))
-        if url_obj.netloc == "www.youtube.com":
-            if url_obj.path == "/playlist":
-                if query.get("list"):
-                    return self._video_ids_from_playlist_id(query.get("list"))
-        raise InvalidLinkFormatException("meh")
-
     @cached
-    def get_video_data(self, video_id: str) -> YouTubeVideo:
+    def _get_video_data(self, video_id: str) -> YouTubeVideo:
         video = self.api.get_video_by_id(video_id=video_id).items[0]
         # get all possible thumbnail variants
         th_v = video.snippet.thumbnails
@@ -98,21 +107,12 @@ class YouTubeApi:
             thumbnail_url=thumbnail.url,
         )
 
-    def get_video_data_multi(self, video_ids: list[str]) -> list[YouTubeVideo]:
-        return [self.get_video_data(video_id) for video_id in video_ids]
-
-    def get_stats(self, video_ids: list[str]) -> YouTubeStatistics:
-        videos = [self.get_video_data(video_id) for video_id in video_ids]
-        return YouTubeStatistics(
-            total_count=len(videos),
-            total_duration=sum(video.duration for video in videos)
-        )
+    def _get_video_data_multi(self, video_ids: list[str]) -> list[YouTubeVideo]:
+        return [self._get_video_data(video_id) for video_id in video_ids]
 
 
 # TODO remove this part again
 if __name__ == "__main__":
     print("hello world")
     api = YouTubeApi(os.environ.get("YOUTUBE_API_KEY"))
-    ids = api.get_video_ids_from_link("https://www.youtube.com/playlist?list=PLRktPAG0Z4OYxnRWDJphPh11euBWSMucb")
-    for video_id_ in ids:
-        print(api.get_video_data(video_id_))
+    print(api.get_video_data_from_url("https://www.youtube.com/playlist?list=PLRktPAG0Z4OYxnRWDJphPh11euBWSMucb"))

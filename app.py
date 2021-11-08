@@ -27,23 +27,12 @@ def home_page() -> str:
 
 
 @app.get("/video_ids/<path:url>")
-def get_video_ids(url) -> Response:
+def get_video_data_from_url(url) -> Response:
     # forward the query string from flask to the url parser inside the ytapi
     if request.query_string:
         url += "?" + request.query_string.decode("utf-8")
-    print("fetching video ids for", url)
-    return jsonify(api.get_video_ids_from_link(url))
-
-
-@app.get("/video_info/<video_id>")
-def get_video_info(video_id: str) -> Response:
-    return jsonify(api.get_video_data(video_id))
-
-
-@validate_video_list
-@app.post("/video_info")
-def get_multi_video_info() -> Response:
-    return jsonify([api.get_video_data(video_id) for video_id in request.json])
+    print("fetching video data for", url)
+    return jsonify(api.get_video_data_from_url(url))
 
 
 # POST video_ids als json-array
