@@ -81,7 +81,7 @@ class YouTubeApi:
         if url_obj.netloc == "www.youtube.com" or url_obj.netloc == "youtube.com" or url_obj.netloc == "m.youtube.com":
             if url_obj.path == "/playlist":
                 if query.get("list"):
-                     return self._video_ids_from_playlist_id(query.get("list"))
+                    return self._video_ids_from_playlist_id(query.get("list"))
             if url_obj.path == "/watch":  # TODO parse playlist IDs in watch links?
                 if query.get("v"):
                     return [query.get("v")]
