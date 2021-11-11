@@ -9,7 +9,13 @@ import pyyoutube
 
 
 class InvalidLinkFormatException(ValueError):
-    pass
+    def __init__(self, message):
+        super().__init__(f"invalid link: {message}")
+
+
+class VideoNotFoundException(ValueError):
+    def __init__(self, message):
+        super().__init__(f"video not found: {message}")
 
 
 @dataclass
@@ -73,20 +79,26 @@ class YouTubeApi:
         ]
 
     def get_video_ids_from_link(self, url: str) -> list[str]:
-        # TODO more url matching :)
-        #      evtl. auch einfach machbar für colin/franz?
         url_obj = urllib.parse.urlparse(url)
         # we're using parse_qsl instead of parse_qs because nobody cares about list-encoded query parameters
         query = dict(urllib.parse.parse_qsl(url_obj.query))
-        if url_obj.netloc == "www.youtube.com":
+        if url_obj.netloc == "www.youtube.com" or url_obj.netloc == "youtube.com" or url_obj.netloc == "m.youtube.com":
             if url_obj.path == "/playlist":
                 if query.get("list"):
                     return self._video_ids_from_playlist_id(query.get("list"))
+            if url_obj.path == "/watch":  # TODO parse playlist IDs in watch links?
+                if query.get("v"):
+                    return [query.get("v")]
+        elif url_obj.netloc == "youtu.be":
+            return [url_obj.path[1:]]
         raise InvalidLinkFormatException("meh")
 
     @cached
     def get_video_data(self, video_id: str) -> YouTubeVideo:
-        video = self.api.get_video_by_id(video_id=video_id).items[0]
+        candidates = self.api.get_video_by_id(video_id=video_id).items
+        if not candidates:
+            raise VideoNotFoundException(video_id)
+        video = candidates[0]
         # get all possible thumbnail variants
         th_v = video.snippet.thumbnails
         # pick highest res thumbnail
