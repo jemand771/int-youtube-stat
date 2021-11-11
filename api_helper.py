@@ -73,8 +73,6 @@ class YouTubeApi:
         ]
 
     def get_video_ids_from_link(self, url: str) -> list[str]:
-        # TODO more url matching :)
-        #      evtl. auch einfach machbar für colin/franz?
         url_obj = urllib.parse.urlparse(url)
         # we're using parse_qsl instead of parse_qs because nobody cares about list-encoded query parameters
         query = dict(urllib.parse.parse_qsl(url_obj.query))
@@ -85,6 +83,8 @@ class YouTubeApi:
             if url_obj.path == "/watch":  # TODO parse playlist IDs in watch links?
                 if query.get("v"):
                     return [query.get("v")]
+        elif url_obj.netloc == "youtu.be":
+            return [url_obj.path[1:]]
         raise InvalidLinkFormatException("meh")
 
     @cached
