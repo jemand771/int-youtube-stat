@@ -19,7 +19,7 @@ jobs:
           pip install green
           pip install -r requirements-test.txt
       - name: Run tests
-        run: green -vv -r -j
+        run: green -vv -r -j results.xml
       - name: debug
         run: |
           ls -la
