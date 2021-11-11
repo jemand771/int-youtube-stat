@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    function get_video_ids() {
+    function get_video_data() {
         fetch("/video_data/" + document.getElementById("url-field").value)
             .then(function (response) {
                 if(!response.ok) throw Error(response.status);
@@ -63,7 +63,7 @@
     </div>
 
     <input type="text" id="url-field"/>
-    <button onclick="get_video_ids();">submit</button>
+    <button onclick="get_video_data();">submit</button>
 </div>
 </body>
 </html>
