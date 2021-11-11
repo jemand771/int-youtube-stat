@@ -22,11 +22,12 @@ jobs:
         run: green -vv -r -j results.xml
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-      - name: debug
-        run: |
-          ls -la
-          echo ------
-          ls -la *
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: results.xml
+          check_run_annotations_branch: "*"
 
   buildx:
     runs-on: ubuntu-latest
