@@ -4,10 +4,10 @@ import re
 
 from flask import abort, Flask, jsonify, request, render_template, Response
 
-from api_helper import YouTubeApi
+import api_helper
 
 app: Flask = Flask(__name__)
-api = YouTubeApi(os.environ.get("YOUTUBE_API_KEY"))
+api = api_helper.YouTubeApi(os.environ.get("YOUTUBE_API_KEY"))
 
 
 def validate_video_list(func):
@@ -45,6 +45,12 @@ def get_video_data_multi(url) -> Response:
 @app.post("/stats")
 def get_stats_from_video_ids() -> Response:
     return jsonify(api.get_stats(request.json))
+
+
+@app.errorhandler(api_helper.InvalidLinkFormatException)
+@app.errorhandler(api_helper.VideoNotFoundException)
+def handle_api_error(ex):
+    return str(ex), 400
 
 
 if __name__ == "__main__":
