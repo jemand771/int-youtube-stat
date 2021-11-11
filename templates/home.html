@@ -1,6 +1,6 @@
 <script type="text/javascript">
     function get_video_ids() {
-        fetch("/video_ids/" + document.getElementById("url-field").value)
+        fetch("/video_data/" + document.getElementById("url-field").value)
             .then(function (response) {
                 return response.json()
             }).then(function (json) {
