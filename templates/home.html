@@ -2,10 +2,13 @@
     function get_video_ids() {
         fetch("/video_data/" + document.getElementById("url-field").value)
             .then(function (response) {
+                if(!response.ok) throw Error(response.status);
                 return response.json()
             }).then(function (json) {
-            alert(JSON.stringify(json))
-        })
+                alert(JSON.stringify(json))
+            }).catch((err) => {
+                alert("deine mama: " + err)
+            })
     }
 
     // https://developer.mozilla.org/en-US/docs/Web/API/fetch
