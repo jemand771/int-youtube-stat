@@ -12,6 +12,11 @@ class InvalidLinkFormatException(ValueError):
     pass
 
 
+class VideoNotFoundException(ValueError):
+    def __init__(self, message):
+        super().__init__(f"video not found: {message}")
+
+
 @dataclass
 class YouTubeVideo:
     id: str
@@ -89,7 +94,10 @@ class YouTubeApi:
 
     @cached
     def get_video_data(self, video_id: str) -> YouTubeVideo:
-        video = self.api.get_video_by_id(video_id=video_id).items[0]
+        candidates = self.api.get_video_by_id(video_id=video_id).items
+        if not candidates:
+            raise VideoNotFoundException(video_id)
+        video = candidates[0]
         # get all possible thumbnail variants
         th_v = video.snippet.thumbnails
         # pick highest res thumbnail
