@@ -9,7 +9,8 @@ import pyyoutube
 
 
 class InvalidLinkFormatException(ValueError):
-    pass
+    def __init__(self, message):
+        super().__init__(f"invalid link: {message}")
 
 
 class VideoNotFoundException(ValueError):
