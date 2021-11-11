@@ -45,3 +45,10 @@ class TestYtApiHelper(unittest.TestCase):
         # deckt nur den Fall ab, das neuer content zur Test-Playlist hinzu kommt
         self.assertGreaterEqual(stats.total_count, 24)
         self.assertGreaterEqual(stats.total_duration, 5773)
+
+    def test_being_slow(self):
+        import time
+        time.sleep(5)
+    
+    def test_failing(self):
+        self.assertEqual(1, 2)
