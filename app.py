@@ -32,6 +32,9 @@ def get_video_data_multi(url) -> Response:
     # forward the query string from flask to the url parser inside the ytapi
     if request.query_string:
         url += "?" + request.query_string.decode("utf-8")
+    # workaround for werkzeug's wonky double slash handling
+    url = re.sub(r"^https?:\/\/?", "", url)
+    url = f"https://{url}"
     print("fetching video data for", url)
     return jsonify(api.get_video_data_multi(api.get_video_ids_from_link(url)))
 
