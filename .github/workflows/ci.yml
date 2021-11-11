@@ -19,7 +19,7 @@ jobs:
           pip install green
           pip install -r requirements-test.txt
       - name: Run tests
-        run: green -vv -r
+        run: green -vv -r -j
 
   buildx:
     runs-on: ubuntu-latest
