@@ -9,7 +9,8 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Oswald&effect=neon|outline|emboss|shadow-multiple|anaglyph">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <script src="static/Franz_script_zeug.js"></script>
+    <script src="static/createSingleVideoObject.js"></script>
+    <script src="static/createVideoObjects.js"></script>
     <style>
         body {
             background: linear-gradient(90deg, rgb(255, 255, 255), rgb(255, 255, 255));
@@ -20,6 +21,24 @@
             font-size: 5em;
             color: rgb(255, 0, 0);
             /*            text-shadow: 3px 3px rgb(255, 255, 255);*/
+        }
+
+        h3 {
+            margin-top: 20px;
+        }
+
+        a:link {
+            text-decoration: none;
+            color: black;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: rgb(0, 24, 158);
+        }
+
+        a:visited {
+            color: rgb(28, 0, 59);
         }
 
         .btn-custom {
@@ -48,6 +67,8 @@
 
         p {
             color: rgb(0, 0, 0);
+            margin: unset;
+            font-size: 1.4em;
         }
 
         html {
@@ -105,13 +126,16 @@
 
         .single-video-thumbnail {
             grid-area: 1 / 1 / 2 / 2;
-            margin-top: 10%
+            margin: 5% auto;
+            max-width:350px;
         }
 
         .single-video-stats {
             grid-area: 1 / 2 / 2 / 3;
             text-align: left;
             margin: 0px;
+            min-width: 600px;
+            max-width: 1000px;
         }
 
         .btn-delete-element {
@@ -119,6 +143,7 @@
             size: 50%;
             margin: 15%;
             color: #ff0000b7;
+
             width: 50px;
             height: 50px;
             background-color: rgb(160, 160, 160);
@@ -165,7 +190,7 @@
 
     <div class="container-fluid sticky-top"
         style="background-color: rgb(228, 228, 228); padding-top: 24px; margin-top: 20px">
-        <form class="d-flex" style="text-align: center" action="/video_ids/">
+        <form class="d-flex" style="text-align: center" action="/video_data/">
             <div class="container-fluid row">
                 <div class="col">
                     <div class="input-group mb-3">
@@ -204,5 +229,5 @@
     <div class="container-float scroll-box">
     </div>
 </body>
-<script src="static/getSubmitEvent.js"></script>
+<script src="static/getResponseFromGETRequest.js"></script>
 </html>

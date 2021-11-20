@@ -1,49 +1,43 @@
-//TODO invoke function for each element in list
-function createSingleVideoContainer(id, title, thumbnail, views, likes, length) {
+function createSingleVideoContainer(id, title, thumbnail, views, likes, duration) {
     let videoContainer = document.getElementsByClassName("scroll-box")[0];
+    // create a container for a single video
     let singleVideoContainer = document.createElement("section");
     singleVideoContainer.setAttribute("class", "single-video-container");
     singleVideoContainer.setAttribute("id", id);
     videoContainer.appendChild(singleVideoContainer);
-
-    let singleVideoThumbnail = document.createElement("div");
+    // append Thumbnail to the container
+    let singleVideoThumbnail = document.createElement("img");
     singleVideoThumbnail.setAttribute("class", "single-video-thumbnail");
     singleVideoThumbnail.setAttribute("id", id);
-    let thumbnailCanvas = function () {
-        let canvas = document.createElement("canvas");
-        canvas.setAttribute("id", id);
-        canvas.setAttribute("width", "200");
-        canvas.setAttribute("height", "100");
-        //TODO put thumbnail here, this is just some beautiful drawing i made :^)
-        let ctx = canvas.getContext("2d");
-        ctx.moveTo(0, 0);
-        ctx.lineTo(200, 100);
-        ctx.moveTo(200, 0);
-        ctx.lineTo(0, 100)
-        ctx.stroke();
-        ctx.arc(100, 50, 50, 0, 2 * Math.PI);
-        ctx.stroke();
-        return canvas;
-    };
-    singleVideoThumbnail.appendChild(thumbnailCanvas());
+    singleVideoThumbnail.setAttribute("src", thumbnail);
     singleVideoContainer.appendChild(singleVideoThumbnail);
-
+    // append Stats for the video
     let singleVideoStats = document.createElement("div");
     singleVideoStats.setAttribute("class", "single-video-stats");
     singleVideoStats.setAttribute("id", id);
-    let videoTitle = document.createElement("h3");
-    videoTitle.innerHTML = title;
-    singleVideoStats.appendChild(videoTitle);
+    // title as clickable URL
+    let videoTitleContainer = document.createElement("h3");
+    singleVideoStats.appendChild(videoTitleContainer);
+    let videoTitleUrl = document.createElement("a");
+    videoTitleUrl.setAttribute("href", ('https://www.youtube.com/watch?v='+id));
+    videoTitleUrl.setAttribute("target", "_blank");
+    videoTitleUrl.setAttribute("rel", "noopener noreferrer");
+    videoTitleUrl.innerHTML = title;
+    videoTitleContainer.appendChild(videoTitleUrl);
+    // Likes
     let videoLikes = document.createElement("p");
-    videoLikes.innerHTML = "Bewertung: " + likes;
+    videoLikes.innerHTML = "Likes: " + likes;
     singleVideoStats.appendChild(videoLikes);
+    // Views
     let videoViews = document.createElement("p");
     videoViews.innerHTML = "Views: " + views;
     singleVideoStats.appendChild(videoViews);
-    let videoLength = document.createElement("p");
-    videoLength.innerHTML = "Länge: " + length;
-    singleVideoStats.appendChild(videoLength);
+    // Duration
+    let videoDuration = document.createElement("p");
+    videoDuration.innerHTML = "Länge: " + duration;
+    singleVideoStats.appendChild(videoDuration);
     singleVideoContainer.appendChild(singleVideoStats);
+    // append delete button for the Container
     let delBut = document.createElement("button");
     delBut.setAttribute("class", "btn-delete-element");
     delBut.setAttribute("onClick", "removeChildElement(this)");
