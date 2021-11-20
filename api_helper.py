@@ -1,12 +1,21 @@
-from dataclasses import dataclass
 import os
+from dataclasses import dataclass
+import functools
+import shelve
+import time
 import urllib.parse
 
 import pyyoutube
 
 
 class InvalidLinkFormatException(ValueError):
-    pass
+    def __init__(self, message):
+        super().__init__(f"invalid link: {message}")
+
+
+class VideoNotFoundException(ValueError):
+    def __init__(self, message):
+        super().__init__(f"video not found: {message}")
 
 
 @dataclass
@@ -19,15 +28,44 @@ class YouTubeVideo:
 
 @dataclass
 class YouTubeStatistics:
-    pass
+    total_count: int
+    total_duration: int
+
+
+def cached(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # args[0] will be self for decorated instance methods
+        cache_config = args[0].cache_config
+        if not cache_config:
+            return func(*args, **kwargs)
+        # this is hacky but.. don't @ me
+        cache_key = str((func.__name__, args[1:], tuple(kwargs.items())))
+        with shelve.open(cache_config["file"]) as cache:
+            cache_obj = cache.get(cache_key)
+            if cache_obj:
+                if cache_obj["time"] + cache_config["time"] > time.time():
+                    return cache_obj["value"]
+                cache.pop(cache_key)
+            val = func(*args, **kwargs)
+            cache[cache_key] = {
+                "time": int(time.time()),
+                "value": val
+            }
+            return val
+
+    return wrapper
 
 
 class YouTubeApi:
 
-    # TODO implement local caching, use locking (!)
-
-    def __init__(self):
-        self.api = pyyoutube.Api(api_key=os.environ.get("YOUTUBE_API_KEY"))
+    def __init__(self, api_key=None, use_cache=True, cache_file=".cache.shelve", cache_time=900):
+        if api_key:
+            self.api = pyyoutube.Api(api_key=api_key)
+        self.cache_config = {
+            "file": cache_file,
+            "time": cache_time
+        } if use_cache else None
 
     def _video_ids_from_playlist_id(self, playlist_id: str) -> list[str]:
         return [
@@ -41,19 +79,26 @@ class YouTubeApi:
         ]
 
     def get_video_ids_from_link(self, url: str) -> list[str]:
-        # TODO more url matching :)
-        #      evtl. auch einfach machbar für colin/franz?
         url_obj = urllib.parse.urlparse(url)
         # we're using parse_qsl instead of parse_qs because nobody cares about list-encoded query parameters
         query = dict(urllib.parse.parse_qsl(url_obj.query))
-        if url_obj.netloc == "www.youtube.com":
+        if url_obj.netloc == "www.youtube.com" or url_obj.netloc == "youtube.com" or url_obj.netloc == "m.youtube.com":
             if url_obj.path == "/playlist":
                 if query.get("list"):
                     return self._video_ids_from_playlist_id(query.get("list"))
+            if url_obj.path == "/watch":  # TODO parse playlist IDs in watch links?
+                if query.get("v"):
+                    return [query.get("v")]
+        elif url_obj.netloc == "youtu.be":
+            return [url_obj.path[1:]]
         raise InvalidLinkFormatException("meh")
 
+    @cached
     def get_video_data(self, video_id: str) -> YouTubeVideo:
-        video = self.api.get_video_by_id(video_id=video_id).items[0]
+        candidates = self.api.get_video_by_id(video_id=video_id).items
+        if not candidates:
+            raise VideoNotFoundException(video_id)
+        video = candidates[0]
         # get all possible thumbnail variants
         th_v = video.snippet.thumbnails
         # pick highest res thumbnail
@@ -69,12 +114,8 @@ class YouTubeApi:
         return [self.get_video_data(video_id) for video_id in video_ids]
 
     def get_stats(self, video_ids: list[str]) -> YouTubeStatistics:
-        pass  # TODO implement statistics accumulator
-
-
-# TODO remove this part again
-if __name__ == "__main__":
-    print("hello world")
-    api = YouTubeApi()
-    # print(api.get_video_ids_from_link("https://www.youtube.com/playlist?list=PLRktPAG0Z4OYxnRWDJphPh11euBWSMucb"))
-    print(api.get_video_data("QQrfPbDkIoE"))
+        videos = [self.get_video_data(video_id) for video_id in video_ids]
+        return YouTubeStatistics(
+            total_count=len(videos),
+            total_duration=sum(video.duration for video in videos)
+        )
