@@ -6,5 +6,8 @@ inputForm.addEventListener('submit', (event) => {
     .then((out) => {
         console.log('Output: ', out);
         createVideoObjects(out);
-    }).catch(err => console.error(err));
+    }).catch(err => {
+    console.error(err);
+    alert(":( Video oder Playlist nicht gefunden.");
+    });
     });
