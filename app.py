@@ -8,8 +8,10 @@ api = YouTubeApi()
 
 @app.get("/")
 def home_page() -> str:
-    return render_template("home.html")
+    return render_template("entwurf_fuer_int.html")
 
+
+# TODO brauchen wir das hier?
 @app.get("/entwurf")
 def entwurf() -> str:
     return render_template("entwurf_fuer_int.html")

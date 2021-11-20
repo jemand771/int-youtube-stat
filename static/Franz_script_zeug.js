@@ -1,3 +1,4 @@
+//TODO invoke function for each element in list
 function createSingleVideoContainer(id, title, thumbnail, views, likes, length) {
     let videoContainer = document.getElementsByClassName("scroll-box")[0];
     let singleVideoContainer = document.createElement("section");
@@ -13,7 +14,7 @@ function createSingleVideoContainer(id, title, thumbnail, views, likes, length) 
         canvas.setAttribute("id", id);
         canvas.setAttribute("width", "200");
         canvas.setAttribute("height", "100");
-        //TODO put thumbnail here
+        //TODO put thumbnail here, this is just some beautiful drawing i made :^)
         let ctx = canvas.getContext("2d");
         ctx.moveTo(0, 0);
         ctx.lineTo(200, 100);
@@ -24,7 +25,6 @@ function createSingleVideoContainer(id, title, thumbnail, views, likes, length) 
         ctx.stroke();
         return canvas;
     };
-    console.log(thumbnailCanvas());
     singleVideoThumbnail.appendChild(thumbnailCanvas());
     singleVideoContainer.appendChild(singleVideoThumbnail);
 
@@ -54,7 +54,7 @@ function createSingleVideoContainer(id, title, thumbnail, views, likes, length) 
     singleVideoContainer.appendChild(delBut);
 
 }
-
+//TODO add delete all elements button
 function removeChildElement(childElement) {
     childElement.parentElement.remove();
 }
