@@ -10,7 +10,7 @@ class TestYtApiHelper(unittest.TestCase):
     TEST_RR_ID = 'dQw4w9WgXcQ'
 
     def setUp(self) -> None:
-        self.api = YouTubeApi(os.environ.get("YOUTUBE_API_KEY"), False)
+        self.api = YouTubeApi(os.environ.get("YOUTUBE_API_TEST_KEY"), False)
 
     def tearDown(self) -> None:
         # fix ResourceWarning from unittest x open requests session
