@@ -54,6 +54,8 @@ class TestHttpApi(unittest.TestCase):
 
     def setUp(self) -> None:
         self.api = YouTubeApi(os.environ.get("YOUTUBE_API_TEST_KEY"), False)
+        # overwrite the flask app's api object to use the testing key aswell
+        main_app.api = YouTubeApi(os.environ.get("YOUTUBE_API_TEST_KEY"), False)
         self.app = main_app.app.test_client()
 
     def tearDown(self) -> None:
