@@ -1,6 +1,9 @@
 import os
 import unittest
-from api_helper import YouTubeApi, InvalidLinkFormatException, VideoNotFoundException
+from api_helper import YouTubeApi, InvalidLinkFormatException, VideoNotFoundException, YouTubeStatistics
+import app as main_app
+
+from parameterized import parameterized
 
 
 class TestYtApiHelper(unittest.TestCase):
@@ -45,3 +48,65 @@ class TestYtApiHelper(unittest.TestCase):
         # deckt nur den Fall ab, das neuer content zur Test-Playlist hinzu kommt
         self.assertGreaterEqual(stats.total_count, 24)
         self.assertGreaterEqual(stats.total_duration, 5773)
+
+
+class TestHttpApi(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.api = YouTubeApi(os.environ.get("YOUTUBE_API_TEST_KEY"), False)
+        self.app = main_app.app.test_client()
+
+    def tearDown(self) -> None:
+        # fix ResourceWarning from unittest x open requests session
+        self.api.api.session.close()
+
+    def test_not_found(self):
+
+        r = self.app.get("/asdasd")
+        self.assertEqual(r.status_code, 404)
+
+    @parameterized.expand([
+        ["short", TestYtApiHelper.TEST_SHORT_VIDEO],
+        ["long", TestYtApiHelper.TEST_LONG_VIDEO]
+    ])
+    def test_video_info(self, _, video_url):
+        r = self.app.get("/video_data/" + video_url)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(
+            r.json[0].get("title"),
+            self.api.get_video_data_multi(
+                self.api.get_video_ids_from_link(
+                    video_url
+                )
+            )[0].title
+        )
+
+    def test_stats(self):
+        r = self.app.post("/stats", json=[TestYtApiHelper.TEST_RR_ID] * 3)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(
+            YouTubeStatistics(**r.json),
+            self.api.get_stats([TestYtApiHelper.TEST_RR_ID] * 3)
+        )
+
+    def test_home(self):
+        r = self.app.get("/")
+        self.assertEqual(r.status_code, 200)
+
+    def test_invalid_url(self):
+        r = self.app.get("/video_data/test")
+        self.assertEqual(r.status_code, 400)
+        self.assertEqual(r.data, b"invalid link")
+
+    def test_invalid_stats_request_invalid_no_json(self):
+        r = self.app.post("/stats")
+        self.assertEqual(r.status_code, 400)
+
+    def test_invalid_stats_request_invalid_json_type(self):
+        r = self.app.post("/stats", json={"a": "b"})
+        self.assertEqual(r.status_code, 400)
+
+    def test_invalid_stats_request_invalid_json_content(self):
+        r = self.app.post("/stats", json=["asdsad", 2, "asdasd"])
+        self.assertEqual(r.status_code, 400)
+
