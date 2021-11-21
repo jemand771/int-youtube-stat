@@ -9,8 +9,8 @@ import pyyoutube
 
 
 class InvalidLinkFormatException(ValueError):
-    def __init__(self, message):
-        super().__init__(f"invalid link: {message}")
+    def __init__(self):
+        super().__init__(f"invalid link")
 
 
 class VideoNotFoundException(ValueError):
@@ -93,7 +93,7 @@ class YouTubeApi:
                     return [query.get("v")]
         elif url_obj.netloc == "youtu.be":
             return [url_obj.path[1:]]
-        raise InvalidLinkFormatException("meh")
+        raise InvalidLinkFormatException()
 
     @cached
     def get_video_data(self, video_id: str) -> YouTubeVideo:
