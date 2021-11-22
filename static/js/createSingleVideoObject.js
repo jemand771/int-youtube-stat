@@ -4,6 +4,9 @@ function createSingleVideoContainer(id, title, thumbnail, views, likes, duration
     let singleVideoContainer = document.createElement("section");
     singleVideoContainer.setAttribute("class", "single-video-container");
     singleVideoContainer.setAttribute("id", id);
+    // TODO likes/views entfernen wenn Zahlen übergeben werden
+    singleVideoContainer.setAttribute("likes", likes);
+    singleVideoContainer.setAttribute("views", views);
     videoContainer.appendChild(singleVideoContainer);
     // append Thumbnail to the container
     let singleVideoThumbnail = document.createElement("img");
