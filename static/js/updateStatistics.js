@@ -6,10 +6,31 @@
             ids[i] = videos[i].getAttribute("id");
         }
         console.log(ids);
-        // TODO fetch-request with ids-array
-    }
+        fetch("/stats", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+//        json: ids,
+        body: JSON.stringify(ids),
+        })
+        .then(res => res.json())
+        .then((out) => {
+            console.log("hello")
+            console.log(out);
+            document.getElementById("label-video-count").innerHTML = videos.length;
+            document.getElementById("label-combined-duration").innerHTML = out.total_duration;
+            document.getElementById("label-average-duration").innerHTML = (out.total_duration/videos.length).toFixed(0);
+            document.getElementById("label-average-likes").innerHTML = out.average_likes;
+            document.getElementById("label-average-views").innerHTML = out.average_views;
+        }).catch(err => {
+        console.error(err);
+        });
+        }
+
 
     function resetStatistics() {
+        document.getElementById("label-video-count").innerHTML = "0";
         document.getElementById("label-combined-duration").innerHTML = "0";
         document.getElementById("label-average-duration").innerHTML = "0";
         document.getElementById("label-average-likes").innerHTML = "0";
