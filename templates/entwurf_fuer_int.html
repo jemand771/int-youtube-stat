@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="static/createSingleVideoObject.js"></script>
     <script src="static/createVideoObjects.js"></script>
+    <script src="static/deleteAllVideoObjects.js"></script>
     <style>
         body {
             background: linear-gradient(90deg, rgb(255, 255, 255), rgb(255, 255, 255));
@@ -220,13 +221,12 @@
                 Durchschnittliche Views:<br>
                 Durchschnittliche Bewertung:
             </p>
+            <br>
         </form>
+            <button class="btn btn-custom" onclick="deleteAllElements()" style="margin-top:20px;"><span class="span-custom">Alles entfernen</span></button>
     </div>
     <br>
-<!--    TODO Test-Button entfernen-->
-    <button class="add-button-2" onclick="createSingleVideoContainer('65as4d6', 'Hallo ihr nudeln', 'thumbnail', 69, 5, 32)">Test</button>
-    <br>
-    <div class="container-float scroll-box">
+   <div class="container-float scroll-box">
     </div>
 </body>
 <script src="static/getResponseFromGETRequest.js"></script>
