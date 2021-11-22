@@ -51,4 +51,5 @@ function createSingleVideoContainer(id, title, thumbnail, views, likes, duration
 //TODO add delete all elements button
 function removeChildElement(childElement) {
     childElement.parentElement.remove();
+    updateStatistics()
 }

@@ -9,9 +9,10 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Oswald&effect=neon|outline|emboss|shadow-multiple|anaglyph">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <script src="static/createSingleVideoObject.js"></script>
-    <script src="static/createVideoObjects.js"></script>
-    <script src="static/deleteAllVideoObjects.js"></script>
+    <script src="static/js/createSingleVideoObject.js"></script>
+    <script src="static/js/updateStatistics.js"></script>
+    <script src="static/js/createVideoObjects.js"></script>
+    <script src="static/js/deleteAllVideoObjects.js"></script>
     <style>
         body {
             background: linear-gradient(90deg, rgb(255, 255, 255), rgb(255, 255, 255));
@@ -213,15 +214,12 @@
     </div>
     <br>
     <div class="container-fluid statistic">
-        <form class="d-flex">
-            <p>
-                Statistiken:<br>
-                Gesamtlänge:<br>
-                Durchschnittliche Länge:<br>
-                Durchschnittliche Views:<br>
-                Durchschnittliche Bewertung:
-            </p>
-            <br>
+        <form class="flex">
+            <p>Statistiken:</p>
+            <p>Gesamtlänge: <label id="label-combined-duration">0</label></p>
+            <p>Durchschnittliche Länge: <label id="label-average-duration">0</label></p>
+            <p>Durchschnittliche Views: <label id="label-average-views">0</label></p>
+            <p>Durchschnittliche Bewertung: <label id="label-average-likes">0</label></p>
         </form>
             <button class="btn btn-custom" onclick="deleteAllElements()" style="margin-top:20px;"><span class="span-custom">Alles entfernen</span></button>
     </div>
@@ -229,5 +227,5 @@
    <div class="container-float scroll-box">
     </div>
 </body>
-<script src="static/getResponseFromGETRequest.js"></script>
+<script src="static/js/getResponseFromGETRequest.js"></script>
 </html>

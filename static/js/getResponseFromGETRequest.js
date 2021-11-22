@@ -6,8 +6,18 @@ inputForm.addEventListener('submit', (event) => {
     .then((out) => {
         console.log('Output: ', out);
         createVideoObjects(out);
+        updateStatistics();
     }).catch(err => {
     console.error(err);
     alert(":( Video oder Playlist nicht gefunden.");
     });
     });
+
+    function updateStats() {
+        let videos = document.getElementsByClassName("single-video-container");
+        let ids;
+        for (let i = 0; i < videos.length; i++) {
+            ids[i] = videos[i].getAttribute("id");
+        }
+        console.log(ids);
+    }
