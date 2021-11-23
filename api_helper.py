@@ -172,18 +172,20 @@ class YouTubeApi:
 
     def get_stats(self, video_ids: list[str]) -> YouTubeStatistics:
         videos = [self.get_video_data(video_id) for video_id in video_ids]
-        total_duration = sum(video.duration for video in videos)
-        total_views = sum(video.view_count for video in videos)
-        total_likes = sum(video.like_count for video in videos)
-        # TODO I'm going to divide by zero here :^)
-        # TODO refactor assignments? -> **
+        total_avg_data = {
+            f"{'avg' if avg else 'total'}_{prop}":
+            # FIXME this is casting everything to TCount which is *wrong*
+            TCount(the_sum) if not avg else TCount(the_sum // len(videos)) if videos else None
+            for prop, attr in {
+                "duration": "duration",
+                "views": "view_count",
+                "likes": "like_count"
+            }.items()
+            for avg in (False, True)
+            for the_sum in [sum(video.__getattribute__(attr) for video in videos)]
+        }
         # TODO remove need for TCount constructor?
         return YouTubeStatistics(
             total_count=len(videos),
-            total_duration=TDuration(total_duration),
-            avg_duration=TDuration(total_duration // len(videos)),
-            total_likes=TCount(total_likes),
-            avg_likes=TCount(total_likes // len(videos)),
-            total_views=TCount(total_views),
-            avg_views=TCount(total_views // len(videos))
+            **total_avg_data
         )
