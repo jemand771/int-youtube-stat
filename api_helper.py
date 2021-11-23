@@ -1,3 +1,4 @@
+import dataclasses
 from dataclasses import dataclass
 from datetime import timedelta
 import functools
@@ -58,8 +59,14 @@ class TDuration(int):
 
 
 # common parent class for easier isinstance checks
+@dataclass
 class YouTubeData:
-    pass
+    def __post_init__(self):
+        print("post init")
+        for field in dataclasses.fields(self):
+            val = getattr(self, field.name)
+            if not isinstance(val, field.type):
+                setattr(self, field.name, field.type(val))
 
 
 @dataclass
@@ -159,10 +166,10 @@ class YouTubeApi:
         return YouTubeVideo(
             id=video.id,
             title=video.snippet.title,
-            duration=TDuration(video.contentDetails.get_video_seconds_duration()),
+            duration=video.contentDetails.get_video_seconds_duration(),
             thumbnail_url=thumbnail.url,
-            view_count=TCount(video.statistics.viewCount),
-            like_count=TCount(video.statistics.likeCount),
+            view_count=video.statistics.viewCount,
+            like_count=video.statistics.likeCount,
             channel_name=video.snippet.channelTitle,
             channel_id=video.snippet.channelId
         )
@@ -174,17 +181,15 @@ class YouTubeApi:
         videos = [self.get_video_data(video_id) for video_id in video_ids]
         total_avg_data = {
             f"{'avg' if avg else 'total'}_{prop}":
-            # FIXME this is casting everything to TCount which is *wrong*
-            TCount(the_sum) if not avg else TCount(the_sum // len(videos)) if videos else None
+            the_sum if not avg else the_sum // len(videos) if videos else None
             for prop, attr in {
                 "duration": "duration",
                 "views": "view_count",
                 "likes": "like_count"
             }.items()
+            for the_sum in [sum(int(getattr(video, attr)) for video in videos)]
             for avg in (False, True)
-            for the_sum in [sum(video.__getattribute__(attr) for video in videos)]
         }
-        # TODO remove need for TCount constructor?
         return YouTubeStatistics(
             total_count=len(videos),
             **total_avg_data
