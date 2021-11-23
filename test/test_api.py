@@ -61,6 +61,7 @@ class TestHttpApi(unittest.TestCase):
     def tearDown(self) -> None:
         # fix ResourceWarning from unittest x open requests session
         self.api.api.session.close()
+        main_app.api.api.session.close()
 
     def test_not_found(self):
 
