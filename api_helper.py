@@ -1,11 +1,14 @@
-import os
 from dataclasses import dataclass
+from datetime import timedelta
 import functools
+import math
 import shelve
 import time
 import urllib.parse
 
 import pyyoutube
+
+TEXT_ERROR_NO_COUNT = "unknown"
 
 
 class InvalidLinkFormatException(ValueError):
@@ -18,20 +21,61 @@ class VideoNotFoundException(ValueError):
         super().__init__(f"video not found: {message}")
 
 
+def format_count(num):
+    # TODO test? -> <-
+    magnitude = int(math.log10(num)) // 3
+    num /= 10 ** (3 * magnitude)
+    last_digit = int(10 * (num - int(num)))
+    last_digit_fmt = f",{last_digit}" if last_digit else ""
+    return f"{int(num)}{last_digit_fmt}{['', 'K', 'M', 'B', 'T'][magnitude]}"
+
+
+class TCount(int):
+    def __new__(cls, val):
+        if val is None:
+            val = -1
+        return super(TCount, cls).__new__(cls, val)
+
+    def __str__(self):
+        if int(self) == -1:
+            return TEXT_ERROR_NO_COUNT
+        return format_count(int(self))
+
+
+class TDuration(int):
+
+    def __str__(self):
+        total_seconds = int(self)
+        seconds = total_seconds % 60
+        total_seconds //= 60
+        minutes = total_seconds % 60
+        total_seconds //= 60
+        hours = total_seconds
+        format_str = f"{minutes:02}:{seconds:02}"
+        if hours:
+            format_str = f"{hours:02}:" + format_str
+        return format_str
+
+
+# common parent class for easier isinstance checks
+class YouTubeData:
+    pass
+
+
 @dataclass
-class YouTubeVideo:
+class YouTubeVideo(YouTubeData):
     id: str
     title: str
-    duration: int
+    duration: TDuration
     thumbnail_url: str
-    view_count: int
-    like_count: int
+    view_count: TCount
+    like_count: TCount
 
 
 @dataclass
-class YouTubeStatistics:
+class YouTubeStatistics(YouTubeData):
     total_count: int
-    total_duration: int
+    total_duration: TDuration
 
 
 def cached(func):
@@ -108,10 +152,10 @@ class YouTubeApi:
         return YouTubeVideo(
             id=video.id,
             title=video.snippet.title,
-            duration=video.contentDetails.get_video_seconds_duration(),
+            duration=TDuration(video.contentDetails.get_video_seconds_duration()),
             thumbnail_url=thumbnail.url,
-            view_count=int(video.statistics.viewCount),
-            like_count=int(video.statistics.likeCount)
+            view_count=TCount(video.statistics.viewCount),
+            like_count=TCount(video.statistics.likeCount)
         )
 
     def get_video_data_multi(self, video_ids: list[str]) -> list[YouTubeVideo]:
@@ -121,5 +165,5 @@ class YouTubeApi:
         videos = [self.get_video_data(video_id) for video_id in video_ids]
         return YouTubeStatistics(
             total_count=len(videos),
-            total_duration=sum(video.duration for video in videos)
+            total_duration=TDuration(sum(video.duration for video in videos))
         )
