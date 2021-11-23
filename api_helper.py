@@ -89,6 +89,7 @@ class YouTubeStatistics(YouTubeData):
     avg_likes: TCount
     total_views: TCount
     avg_views: TCount
+    total_channels: int
 
 
 def cached(func):
@@ -191,5 +192,6 @@ class YouTubeApi:
         }
         return YouTubeStatistics(
             total_count=len(videos),
+            total_channels=len(list(set(video.channel_id for video in videos))),
             **total_avg_data
         )
