@@ -62,7 +62,6 @@ class TDuration(int):
 @dataclass
 class YouTubeData:
     def __post_init__(self):
-        print("post init")
         for field in dataclasses.fields(self):
             val = getattr(self, field.name)
             if not isinstance(val, field.type):
