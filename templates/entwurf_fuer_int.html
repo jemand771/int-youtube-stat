@@ -16,14 +16,13 @@
     <script src="static/js/deleteAllVideoObjects.js"></script>
     <style>
         body {
-            background: linear-gradient(90deg, rgb(255, 255, 255), rgb(255, 255, 255));
+            background: white;
         }
 
         h1 {
             font-family: 'Oswald', sans-serif;
             font-size: 5em;
             color: rgb(255, 0, 0);
-            /*            text-shadow: 3px 3px rgb(255, 255, 255);*/
         }
 
         h3 {
@@ -187,19 +186,19 @@
 
 <body>
     <div class="container-fluid row" style="margin-top: 10px">
-        <div class="container-fluid col-sm-4" style="Text-align: right; Padding-Top: 25px">
+        <div class="col-4 pt-4 text-end" >
             <i class="material-icons i_header">video_library</i>
         </div>
-        <div class=" container-fluid col-sm-8 pt-2">
+        <div class="col-8 pt-2">
             <h1>YouTube Playlist Analyzer</h1>
         </div>
     </div>
 
-    <div class="container-fluid sticky-top"
-        style="background-color: rgb(228, 228, 228); padding-top: 24px; margin-top: 20px">
-        <form class="d-flex" style="text-align: center" action="/video_data/">
+    <div class="container-fluid sticky-top pt-3"
+        style="background-color: rgb(228, 228, 228); margin-top: 20px">
+        <form class="d-flex" action="/video_data/">
             <div class="container-fluid row">
-                <div class="col">
+                <div class="col-9 text-start">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text span-input">
@@ -211,8 +210,8 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-1">
-                    <button class="btn btn-custom" type="submit"><span class="span-custom">Submit</span></button>
+                <div class="col-3">
+                    <button class="btn btn-custom" type="submit"><span class="span-custom">Senden</span></button>
                 </div>
             </div>
         </form>
