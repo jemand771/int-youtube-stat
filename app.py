@@ -35,7 +35,6 @@ def get_video_data_multi(url) -> Response:
     # workaround for werkzeug's wonky double slash handling
     url = re.sub(r"^https?://?", "", url)
     url = f"https://{url}"
-    print("fetching video data for", url)
     return jsonify(api.get_video_data_multi(api.get_video_ids_from_link(url)))
 
 
