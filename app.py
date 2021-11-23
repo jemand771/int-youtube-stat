@@ -40,11 +40,11 @@ def get_video_data_multi(url) -> Response:
 
 
 # POST video_ids als json-array
+# z.B. ["foo", "bar", "asasdasdasd"]
 @app.post("/stats")
 @validate_video_list
 def get_stats_from_video_ids() -> Response:
     return jsonify(api.get_stats(request.json))
-# z.B. ["foo", "bar", "asasdasdasd"]
 
 
 @app.errorhandler(api_helper.InvalidLinkFormatException)
