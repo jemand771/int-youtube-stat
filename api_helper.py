@@ -70,6 +70,8 @@ class YouTubeVideo(YouTubeData):
     thumbnail_url: str
     view_count: TCount
     like_count: TCount
+    channel_id: str
+    channel_name: str
 
 
 @dataclass
@@ -155,7 +157,9 @@ class YouTubeApi:
             duration=TDuration(video.contentDetails.get_video_seconds_duration()),
             thumbnail_url=thumbnail.url,
             view_count=TCount(video.statistics.viewCount),
-            like_count=TCount(video.statistics.likeCount)
+            like_count=TCount(video.statistics.likeCount),
+            channel_name=video.snippet.channelTitle,
+            channel_id=video.snippet.channelId
         )
 
     def get_video_data_multi(self, video_ids: list[str]) -> list[YouTubeVideo]:
