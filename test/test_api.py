@@ -6,18 +6,24 @@ import app as main_app
 from parameterized import parameterized
 
 
-class TestYtApiHelper(unittest.TestCase):
-    TEST_PLAYLIST = 'https://www.youtube.com/playlist?list=PLRktPAG0Z4OYxnRWDJphPh11euBWSMucb'
-    TEST_LONG_VIDEO = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-    TEST_SHORT_VIDEO = 'https://youtu.be/dQw4w9WgXcQ'
-    TEST_RR_ID = 'dQw4w9WgXcQ'
-
+class ApiTestBase(unittest.TestCase):
     def setUp(self) -> None:
-        self.api = YouTubeApi(os.environ.get("YOUTUBE_API_TEST_KEY"), False)
+        self.api = self.make_api()
 
     def tearDown(self) -> None:
         # fix ResourceWarning from unittest x open requests session
         self.api.api.session.close()
+
+    @staticmethod
+    def make_api(use_cache=False, **kwargs):
+        return YouTubeApi(os.environ.get("YOUTUBE_API_TEST_KEY"), use_cache=use_cache, **kwargs)
+
+
+class TestYtApiHelper(ApiTestBase):
+    TEST_PLAYLIST = 'https://www.youtube.com/playlist?list=PLRktPAG0Z4OYxnRWDJphPh11euBWSMucb'
+    TEST_LONG_VIDEO = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+    TEST_SHORT_VIDEO = 'https://youtu.be/dQw4w9WgXcQ'
+    TEST_RR_ID = 'dQw4w9WgXcQ'
 
     def test_get_video_data_via_multiple_success(self):
         rick_roll_data = self.api.get_video_data_multi([self.TEST_RR_ID])
@@ -50,21 +56,19 @@ class TestYtApiHelper(unittest.TestCase):
         self.assertGreaterEqual(stats.total_duration, 5773)
 
 
-class TestHttpApi(unittest.TestCase):
+class TestHttpApi(ApiTestBase):
 
     def setUp(self) -> None:
-        self.api = YouTubeApi(os.environ.get("YOUTUBE_API_TEST_KEY"), False)
         # overwrite the flask app's api object to use the testing key aswell
-        main_app.api = YouTubeApi(os.environ.get("YOUTUBE_API_TEST_KEY"), False)
+        main_app.api = self.make_api()
         self.app = main_app.app.test_client()
+        super(TestHttpApi, self).setUp()
 
     def tearDown(self) -> None:
-        # fix ResourceWarning from unittest x open requests session
-        self.api.api.session.close()
         main_app.api.api.session.close()
+        super(TestHttpApi, self).tearDown()
 
     def test_not_found(self):
-
         r = self.app.get("/asdasd")
         self.assertEqual(r.status_code, 404)
 
@@ -112,4 +116,3 @@ class TestHttpApi(unittest.TestCase):
     def test_invalid_stats_request_invalid_json_content(self):
         r = self.app.post("/stats", json=["asdsad", 2, "asdasd"])
         self.assertEqual(r.status_code, 400)
-
