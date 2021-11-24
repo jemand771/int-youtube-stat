@@ -9,6 +9,6 @@ inputForm.addEventListener('submit', (event) => {
         updateStatistics();
     }).catch(err => {
     console.error(err);
-    alert(":( Video oder Playlist nicht gefunden.");
+    alert("Video oder Playlist wurde nicht gefunden.");
     });
     });
