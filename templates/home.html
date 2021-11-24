@@ -29,6 +29,10 @@
             margin-top: 20px;
         }
 
+        .div1 {
+            background-color: rgb(228, 228, 228)
+        }
+
         a:link {
             text-decoration: none;
             color: black;
@@ -185,7 +189,7 @@
 </head>
 
 <body>
-    <div class="container-fluid row" style="margin-top: 10px">
+    <div class="container-fluid row mt-1">
         <div class="col-4 pt-4 text-end" >
             <i class="material-icons i_header">video_library</i>
         </div>
@@ -194,8 +198,7 @@
         </div>
     </div>
 
-    <div class="container-fluid sticky-top pt-3"
-        style="background-color: rgb(228, 228, 228); margin-top: 20px">
+    <div class="container-fluid sticky-top pt-3 mt-2 div1">
         <form class="d-flex" action="/video_data/">
             <div class="container-fluid row">
                 <div class="col-9 text-start">
@@ -226,7 +229,7 @@
             <p>Durchschnittliche Views: <label id="label-average-views">0</label></p>
             <p>Durchschnittliche Bewertung: <label id="label-average-likes">0</label></p>
         </form>
-            <button class="btn btn-custom" onclick="deleteAllElements()" style="margin-top:20px;"><span class="span-custom">Alles entfernen</span></button>
+            <button class="btn btn-custom mt-2" onclick="deleteAllElements()"><span class="span-custom">Alles entfernen</span></button>
     </div>
     <br>
    <div class="container-float scroll-box">
