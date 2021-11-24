@@ -1,8 +1,10 @@
+import dataclasses
 import functools
 import os
 import re
 
 from flask import abort, Flask, jsonify, request, render_template, Response
+from flask.json import JSONEncoder
 
 import api_helper
 
@@ -22,14 +24,28 @@ def validate_video_list(func):
     return wrapper
 
 
-# TODO entwurf_fuer_int in was sinnvolles umbenennen
+class MyJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        try:
+            if isinstance(obj, api_helper.YouTubeData):
+                return {
+                    key: str(val)
+                    for key, val
+                    in dataclasses.asdict(obj).items()
+                }
+        except TypeError as ex:
+            print(ex)
+            pass
+        return JSONEncoder.default(self, obj)
+
+
+# TODO test? -> <-
+app.json_encoder = MyJSONEncoder
+
+
 @app.get("/")
 def home_page() -> str:
-    return render_template("entwurf_fuer_int.html")
-
-@app.get("/entwurf")
-def entwurf() -> str:
-    return render_template("entwurf_fuer_int.html")
+    return render_template("home.html")
 
 
 @app.get("/video_data/<path:url>")
@@ -40,14 +56,19 @@ def get_video_data_multi(url) -> Response:
     # workaround for werkzeug's wonky double slash handling
     url = re.sub(r"^https?://?", "", url)
     url = f"https://{url}"
-    print("fetching video data for", url)
-    return jsonify(api.get_video_data_multi(api.get_video_ids_from_link(url)))
+    videos = []
+    for video_id in api.get_video_ids_from_link(url):
+        try:
+            videos.append(api.get_video_data(video_id))
+        except api_helper.VideoNotFoundException:
+            pass
+    return jsonify(videos)
 
 
 # POST video_ids als json-array
 # z.B. ["foo", "bar", "asasdasdasd"]
-@validate_video_list
 @app.post("/stats")
+@validate_video_list
 def get_stats_from_video_ids() -> Response:
     return jsonify(api.get_stats(request.json))
 
