@@ -23,7 +23,6 @@ class VideoNotFoundException(ValueError):
 
 
 def format_count(num):
-    # TODO test? -> <-
     magnitude = int(math.log10(num)) // 3
     num /= 10 ** (3 * magnitude)
     last_digit = int(10 * (num - int(num)))

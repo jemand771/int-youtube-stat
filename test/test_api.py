@@ -25,6 +25,7 @@ class TestYtApiHelper(ApiTestBase):
     TEST_SHORT_VIDEO = 'https://youtu.be/dQw4w9WgXcQ'
     TEST_VIDEO_WITH_PLAYLIST = 'https://www.youtube.com/watch?v=KtJ79ZjJ3lM&list=PLRktPAG0Z4OYxnRWDJphPh11euBWSMucb&index=2'
     TEST_RR_ID = 'dQw4w9WgXcQ'
+    TEST_LONG_DURATION_VIDEO_ID = 'jIQ6UV2onyI'
 
     def test_get_video_data_success(self):
         rick_roll_data = self.api.get_video_data(self.TEST_RR_ID)
@@ -126,3 +127,8 @@ class TestHttpApi(ApiTestBase):
     def test_invalid_stats_request_invalid_json_content(self):
         r = self.app.post("/stats", json=["asdsad", 2, "asdasd"])
         self.assertEqual(r.status_code, 400)
+
+    def test_formatter_hours_success(self):
+        encoder = main_app.MyJSONEncoder
+        r = encoder.default(encoder, self.api.get_video_data(TestYtApiHelper.TEST_LONG_DURATION_VIDEO_ID))
+        self.assertEqual(r['duration'], '10:00:01')
