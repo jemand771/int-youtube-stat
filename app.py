@@ -1,8 +1,10 @@
+import dataclasses
 import functools
 import os
 import re
 
 from flask import abort, Flask, jsonify, request, render_template, Response
+from flask.json import JSONEncoder
 
 import api_helper
 
@@ -20,6 +22,25 @@ def validate_video_list(func):
         return func(*args, **kwargs)
 
     return wrapper
+
+
+class MyJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        try:
+            if isinstance(obj, api_helper.YouTubeData):
+                return {
+                    key: str(val)
+                    for key, val
+                    in dataclasses.asdict(obj).items()
+                }
+        except TypeError as ex:
+            print(ex)
+            pass
+        return JSONEncoder.default(self, obj)
+
+
+# TODO test? -> <-
+app.json_encoder = MyJSONEncoder
 
 
 @app.get("/")
@@ -46,8 +67,8 @@ def get_video_data_multi(url) -> Response:
 
 # POST video_ids als json-array
 # z.B. ["foo", "bar", "asasdasdasd"]
-@validate_video_list
 @app.post("/stats")
+@validate_video_list
 def get_stats_from_video_ids() -> Response:
     return jsonify(api.get_stats(request.json))
 

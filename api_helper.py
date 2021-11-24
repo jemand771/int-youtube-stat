@@ -1,16 +1,20 @@
-import os
+import dataclasses
 from dataclasses import dataclass
+from datetime import timedelta
 import functools
+import math
 import shelve
 import time
 import urllib.parse
 
 import pyyoutube
 
+TEXT_ERROR_NO_COUNT = "unknown"
+
 
 class InvalidLinkFormatException(ValueError):
-    def __init__(self, message):
-        super().__init__(f"invalid link: {message}")
+    def __init__(self):
+        super().__init__(f"invalid link")
 
 
 class VideoNotFoundException(ValueError):
@@ -18,20 +22,74 @@ class VideoNotFoundException(ValueError):
         super().__init__(f"video not found: {message}")
 
 
+def format_count(num):
+    # TODO test? -> <-
+    magnitude = int(math.log10(num)) // 3
+    num /= 10 ** (3 * magnitude)
+    last_digit = int(10 * (num - int(num)))
+    last_digit_fmt = f",{last_digit}" if last_digit else ""
+    return f"{int(num)}{last_digit_fmt}{['', 'K', 'M', 'B', 'T'][magnitude]}"
+
+
+class TCount(int):
+    def __new__(cls, val):
+        if val is None:
+            val = -1
+        return super(TCount, cls).__new__(cls, val)
+
+    def __str__(self):
+        if int(self) == -1:
+            return TEXT_ERROR_NO_COUNT
+        return format_count(int(self))
+
+
+class TDuration(int):
+
+    def __str__(self):
+        total_seconds = int(self)
+        seconds = total_seconds % 60
+        total_seconds //= 60
+        minutes = total_seconds % 60
+        total_seconds //= 60
+        hours = total_seconds
+        format_str = f"{minutes:02}:{seconds:02}"
+        if hours:
+            format_str = f"{hours:02}:" + format_str
+        return format_str
+
+
+# common parent class for easier isinstance checks
 @dataclass
-class YouTubeVideo:
+class YouTubeData:
+    def __post_init__(self):
+        for field in dataclasses.fields(self):
+            val = getattr(self, field.name)
+            if not isinstance(val, field.type):
+                setattr(self, field.name, field.type(val))
+
+
+@dataclass
+class YouTubeVideo(YouTubeData):
     id: str
     title: str
-    duration: int
+    duration: TDuration
     thumbnail_url: str
-    view_count: int
-    like_count: int
+    view_count: TCount
+    like_count: TCount
+    channel_id: str
+    channel_name: str
 
 
 @dataclass
-class YouTubeStatistics:
+class YouTubeStatistics(YouTubeData):
     total_count: int
-    total_duration: int
+    total_duration: TDuration
+    avg_duration: TDuration
+    total_likes: TCount
+    avg_likes: TCount
+    total_views: TCount
+    avg_views: TCount
+    total_channels: int
 
 
 def cached(func):
@@ -95,7 +153,7 @@ class YouTubeApi:
                     return [query.get("v")]
         elif url_obj.netloc == "youtu.be":
             return [url_obj.path[1:]]
-        raise InvalidLinkFormatException("meh")
+        raise InvalidLinkFormatException()
 
     @cached
     def get_video_data(self, video_id: str) -> YouTubeVideo:
@@ -112,8 +170,10 @@ class YouTubeApi:
             title=video.snippet.title,
             duration=video.contentDetails.get_video_seconds_duration(),
             thumbnail_url=thumbnail.url,
-            view_count=int(video.statistics.viewCount),
-            like_count=int(video.statistics.likeCount)
+            view_count=video.statistics.viewCount,
+            like_count=video.statistics.likeCount,
+            channel_name=video.snippet.channelTitle,
+            channel_id=video.snippet.channelId
         )
 
     def get_video_data_multi(self, video_ids: list[str]) -> list[YouTubeVideo]:
@@ -121,7 +181,19 @@ class YouTubeApi:
 
     def get_stats(self, video_ids: list[str]) -> YouTubeStatistics:
         videos = [self.get_video_data(video_id) for video_id in video_ids]
+        total_avg_data = {
+            f"{'avg' if avg else 'total'}_{prop}":
+            the_sum if not avg else the_sum // len(videos) if videos else None
+            for prop, attr in {
+                "duration": "duration",
+                "views": "view_count",
+                "likes": "like_count"
+            }.items()
+            for the_sum in [sum(int(getattr(video, attr)) for video in videos)]
+            for avg in (False, True)
+        }
         return YouTubeStatistics(
             total_count=len(videos),
-            total_duration=sum(video.duration for video in videos)
+            total_channels=len(list(set(video.channel_id for video in videos))),
+            **total_avg_data
         )
