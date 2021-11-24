@@ -1,6 +1,6 @@
 import os
 import unittest
-from api_helper import YouTubeApi, InvalidLinkFormatException, VideoNotFoundException, YouTubeStatistics
+from api_helper import YouTubeApi, InvalidLinkFormatException, VideoNotFoundException
 import app as main_app
 
 from parameterized import parameterized
@@ -92,8 +92,10 @@ class TestHttpApi(ApiTestBase):
         r = self.app.post("/stats", json=[TestYtApiHelper.TEST_RR_ID] * 3)
         self.assertEqual(r.status_code, 200)
         self.assertEqual(
-            YouTubeStatistics(**r.json),
-            self.api.get_stats([TestYtApiHelper.TEST_RR_ID] * 3)
+            r.json,
+            main_app.MyJSONEncoder().default(
+                self.api.get_stats([TestYtApiHelper.TEST_RR_ID] * 3)
+            )
         )
 
     def test_home(self):
