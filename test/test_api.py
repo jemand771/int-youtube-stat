@@ -23,18 +23,26 @@ class TestYtApiHelper(ApiTestBase):
     TEST_PLAYLIST = 'https://www.youtube.com/playlist?list=PLRktPAG0Z4OYxnRWDJphPh11euBWSMucb'
     TEST_LONG_VIDEO = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     TEST_SHORT_VIDEO = 'https://youtu.be/dQw4w9WgXcQ'
+    TEST_VIDEO_WITH_PLAYLIST = 'https://www.youtube.com/watch?v=KtJ79ZjJ3lM&list=PLRktPAG0Z4OYxnRWDJphPh11euBWSMucb&index=2'
     TEST_RR_ID = 'dQw4w9WgXcQ'
 
-    def test_get_video_data_via_multiple_success(self):
-        rick_roll_data = self.api.get_video_data_multi([self.TEST_RR_ID])
-        self.assertEqual(rick_roll_data[0].title, 'Rick Astley - Never Gonna Give You Up (Official Music Video)')
-        self.assertEqual(rick_roll_data[0].id, self.TEST_RR_ID)
+    def test_get_video_data_success(self):
+        rick_roll_data = self.api.get_video_data(self.TEST_RR_ID)
+        self.assertEqual(rick_roll_data.title, 'Rick Astley - Never Gonna Give You Up (Official Music Video)')
+        self.assertEqual(rick_roll_data.id, self.TEST_RR_ID)
 
     def test_get_video_data_invalid_id(self):
         self.assertRaises(VideoNotFoundException, self.api.get_video_data, 'noid')
 
     def test_get_video_ids_success_playlist_success(self):
         video_ids = self.api.get_video_ids_from_link(self.TEST_PLAYLIST)
+        # just check some carefully chosen videos from this playlist
+        self.assertIn('KtJ79ZjJ3lM', video_ids)
+        self.assertIn('l-Egisu_4AA', video_ids)
+        self.assertIn('l77qrAnW1N4', video_ids)
+
+    def test_get_video_ids_from_watch_link_with_list_success(self):
+        video_ids = self.api.get_video_ids_from_link(self.TEST_VIDEO_WITH_PLAYLIST)
         # just check some carefully chosen videos from this playlist
         self.assertIn('KtJ79ZjJ3lM', video_ids)
         self.assertIn('l-Egisu_4AA', video_ids)
@@ -81,11 +89,11 @@ class TestHttpApi(ApiTestBase):
         self.assertEqual(r.status_code, 200)
         self.assertEqual(
             r.json[0].get("title"),
-            self.api.get_video_data_multi(
+            self.api.get_video_data(
                 self.api.get_video_ids_from_link(
                     video_url
-                )
-            )[0].title
+                )[0]
+            ).title
         )
 
     def test_stats(self):
