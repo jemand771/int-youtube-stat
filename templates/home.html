@@ -1,69 +1,236 @@
-<script type="text/javascript">
-    function get_video_data() {
-        fetch("/video_data/" + document.getElementById("url-field").value)
-            .then(function (response) {
-                if(!response.ok) throw Error(response.status);
-                return response.json()
-            }).then(function (json) {
-                alert(JSON.stringify(json))
-            }).catch((err) => {
-                alert("deine mama: " + err)
-            })
-    }
-
-    // https://developer.mozilla.org/en-US/docs/Web/API/fetch
-</script>
-
-
-<!------------- as asdasd asd a sd -------------->
-
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
+
 <head>
-    <title>Playlist analyzer</title>
+    <title>Playlist Analyzer</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=DotGothic16&effect=neon|outline|emboss|shadow-multiple|anaglyph">
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Oswald&effect=neon|outline|emboss|shadow-multiple|anaglyph">
+        href="https://fonts.googleapis.com/css?family=Oswald&effect=neon|outline|emboss|shadow-multiple|anaglyph">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="static/js/createSingleVideoObject.js"></script>
+    <script src="static/js/updateStatistics.js"></script>
+    <script src="static/js/createVideoObjects.js"></script>
+    <script src="static/js/deleteAllVideoObjects.js"></script>
     <style>
         body {
-            background: linear-gradient(90deg, rgb(0, 0, 0), rgb(64, 4, 4));
+            background: white;
         }
 
         h1 {
-            font-family: 'DotGothic16';
-            font-size: 2em;
+            font-family: 'Oswald', sans-serif;
+            font-size: 5em;
+            color: rgb(255, 0, 0);
+        }
+
+        h3 {
+            margin-top: 20px;
+        }
+
+        a:link {
+            text-decoration: none;
             color: black;
         }
 
-        h2 {
-            font-family: 'Oswald';
-            font-size: 4.4em;
-            color: rgb(110, 13, 13);
-            text-shadow: 3px 3px rgb(0, 0, 0);
+        a:hover {
+            text-decoration: underline;
+            color: rgb(0, 24, 158);
+        }
+
+        a:visited {
+            color: rgb(28, 0, 59);
+        }
+
+        .btn-custom {
+            background-image: linear-gradient(to right, #ff3ef5 5%, #dc68ff 15%, #5c5fff 33%, #48e1f5 44%, #58ff52 55%, #fffc5e 66%, #ffbd2e 77%, #ff5151 88%,#ff3ef5 100%);
+            position: relative;
+            padding: 3px;
+            display: inline-block;
+            border-radius: 7px;
+        }
+
+        .span-custom {
+            display: inline-block;
+            background: white;
+            color: #191919;
+            text-transform: uppercase;
+            padding: 0 20px;
+            border-radius: 5px;
+            font-family: "Oswald", sans-serif;
+            font-size: 1.8em;
+        }
+
+        .span-input {
+            background-color: rgb(197, 197, 197);
+            border-color: rgb(197, 197, 197)
+        }
+
+        p {
+            color: rgb(0, 0, 0);
+            margin: unset;
+            font-size: 1.4em;
+        }
+
+        html {
+            scrollbar-color: #851010 #530505;
+            scrollbar-width: thin
+        }
+
+        .statistic {
+            background-color: rgb(197, 197, 197);
+            color: rgb(0, 0, 0);
+            text-align: left;
+            padding-top: 30px;
+            padding-left: 30px;
+            padding-bottom: 14px;
+        }
+
+        .span-custom:hover {
+            background-image: linear-gradient(to right, #ff3ef5 5%, #dc68ff 15%, #5c5fff 33%, #48e1f5 44%, #58ff52 55%, #fffc5e 66%, #ffbd2e 77%, #ff5151 88%,#ff3ef5 100%);
+        }
+
+        i {
+            color: rgb(255, 0, 0)
+        }
+
+        .i_header {
+            font-size: 72px
+        }
+
+        .i_input {
+            font-size: 38px
+        }
+
+        .label-custom {
+            background-color: rgb(197, 197, 197);
+            border-color: rgb(197, 197, 197)
+        }
+
+        .input-custom {
+            background-color: rgb(255, 255, 255);
+            border-color: rgb(160, 160, 160);
+            color: rgb(129, 129, 129)
+        }
+
+        /* Franz */
+        .single-video-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: 1fr;
+            grid-column-gap: 20px;
+            grid-row-gap: 20px;
+            background-color: rgb(197,197,197);
+            margin-top: 1%;
+            padding: 20px 0 20px 0;
+            position: relative;
+        }
+
+        .single-video-thumbnail {
+            grid-area: 1 / 1 / 2 / 2;
+            margin: 5% auto;
+            max-width:350px;
+        }
+
+        .single-video-stats {
+            grid-area: 1 / 2 / 2 / 3;
+            text-align: left;
+            margin: 0px;
+            min-width: 600px;
+            max-width: 1000px;
+        }
+
+        .btn-delete-element {
+            grid-area: 1 / 3 / 2 / 4;
+            size: 50%;
+            color: #ff0000b7;
+            width: 50px;
+            height: 50px;
+            background-color: rgb(160, 160, 160);
+            border: 5px outset #470000;
+            border-radius: 50%;
+            margin: 0 0 0 40px;
+            position: absolute;
+            top: 50%;
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+        }
+
+        .btn-delete-element:hover {
+            background-color: #c96e6e;
+        }
+
+        .btn-delete-element:active {
+            background-color: #752727;
+        }
+
+        .scroll-box {
+            text-align: center;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #a3a3a394;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3b3b3bab;
+            border-radius: 10px;
         }
     </style>
 </head>
+
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col-sm-1 pt-3">
-            <i class="material-icons" style="font-size:72px;color:rgb(110, 13, 13);">video_library</i>
+    <div class="container-fluid row" style="margin-top: 10px">
+        <div class="col-4 pt-4 text-end" >
+            <i class="material-icons i_header">video_library</i>
         </div>
-        <div class="col-sm-11 pt-2">
-            <h2>YouTube Playlist Analyzer</h2>
+        <div class="col-8 pt-2">
+            <h1>YouTube Playlist Analyzer</h1>
         </div>
     </div>
 
-    <input type="text" id="url-field"/>
-    <button onclick="get_video_data();">submit</button>
-</div>
+    <div class="container-fluid sticky-top pt-3"
+        style="background-color: rgb(228, 228, 228); margin-top: 20px">
+        <form class="d-flex" action="/video_data/">
+            <div class="container-fluid row">
+                <div class="col-9 text-start">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text span-input">
+                                <i class="material-icons i_input">video_library</i></span>
+                        </div>
+                        <label class="form-control input-lg label-custom" for="lk">
+                            <input class="form-control input-lg input-custom" type="text"
+                                placeholder="Hier Link eingeben" id="lk" name="path">
+                        </label>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-custom" type="submit"><span class="span-custom">Senden</span></button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br>
+    <div class="container-fluid statistic">
+        <form class="flex">
+            <p>Statistiken:</p>
+            <p>Anzahl Videos: <label id="label-video-count">0</label></p>
+            <p>Gesamtlänge: <label id="label-combined-duration">0</label></p>
+            <p>Durchschnittliche Länge: <label id="label-average-duration">0</label></p>
+            <p>Durchschnittliche Views: <label id="label-average-views">0</label></p>
+            <p>Durchschnittliche Bewertung: <label id="label-average-likes">0</label></p>
+        </form>
+            <button class="btn btn-custom" onclick="deleteAllElements()" style="margin-top:20px;"><span class="span-custom">Alles entfernen</span></button>
+    </div>
+    <br>
+   <div class="container-float scroll-box">
+    </div>
 </body>
+<script src="static/js/getResponseFromGETRequest.js"></script>
 </html>
