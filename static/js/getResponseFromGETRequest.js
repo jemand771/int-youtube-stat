@@ -4,7 +4,7 @@ inputForm.addEventListener('submit', (event) => {
     fetch("/video_data/"+document.getElementById("lk").value)
     .then(res => res.json())
     .then((out) => {
-//        console.log('Output: ', out);
+        console.log('Output: ', out);
         createVideoObjects(out);
         updateStatistics();
     }).catch(err => {
