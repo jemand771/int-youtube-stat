@@ -1,6 +1,6 @@
 import os
 import unittest
-from api_helper import YouTubeApi, InvalidLinkFormatException, VideoNotFoundException
+from api_helper import YouTubeApi, InvalidLinkFormatException, VideoNotFoundException, YouTubeVideo
 import app as main_app
 
 from parameterized import parameterized
@@ -129,6 +129,19 @@ class TestHttpApi(ApiTestBase):
         self.assertEqual(r.status_code, 400)
 
     def test_formatter_hours_success(self):
-        encoder = main_app.MyJSONEncoder
-        r = encoder.default(encoder, self.api.get_video_data(TestYtApiHelper.TEST_LONG_DURATION_VIDEO_ID))
+        encoder = main_app.MyJSONEncoder()
+        # while we could cast to TCount and TDuration here, we can also just let post_init handle that
+        # noinspection PyTypeChecker
+        r = encoder.default(YouTubeVideo(
+            id="aaaaaaaaaaa",
+            title="video title",
+            duration=10*60*60 + 1,
+            thumbnail_url="https://foo.bar",
+            view_count=123,
+            like_count=123_456_789,
+            channel_id="some-id",
+            channel_name="the best channel"
+        ))
         self.assertEqual(r['duration'], '10:00:01')
+        self.assertEqual(r['view_count'], '123')
+        self.assertEqual(r['like_count'], '123,4M')
