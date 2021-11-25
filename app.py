@@ -26,20 +26,15 @@ def validate_video_list(func):
 
 class MyJSONEncoder(JSONEncoder):
     def default(self, obj):
-        try:
-            if isinstance(obj, api_helper.YouTubeData):
-                return {
-                    key: str(val)
-                    for key, val
-                    in dataclasses.asdict(obj).items()
-                }
-        except TypeError as ex:
-            print(ex)
-            pass
+        if isinstance(obj, api_helper.YouTubeData):
+            return {
+                key: str(val)
+                for key, val
+                in dataclasses.asdict(obj).items()
+            }
         return JSONEncoder.default(self, obj)
 
 
-# TODO test? -> <-
 app.json_encoder = MyJSONEncoder
 
 
