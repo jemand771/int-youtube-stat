@@ -4,11 +4,11 @@ inputForm.addEventListener('submit', (event) => {
     fetch("/video_data/"+document.getElementById("lk").value)
     .then(res => res.json())
     .then((out) => {
-//        console.log('Output: ', out);
+        console.log('Output: ', out);
         createVideoObjects(out);
         updateStatistics();
     }).catch(err => {
     console.error(err);
-    alert(":( Video oder Playlist nicht gefunden.");
+    alert("Video oder Playlist wurde nicht gefunden.");
     });
     });

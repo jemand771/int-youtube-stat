@@ -13,7 +13,7 @@
     <script src="static/js/createSingleVideoObject.js"></script>
     <script src="static/js/updateStatistics.js"></script>
     <script src="static/js/createVideoObjects.js"></script>
-    <script src="static/js/deleteAllVideoObjects.js"></script>
+    <script src="static/js/deleteVideoObjects.js"></script>
     <style>
         body {
             background: white;
@@ -157,14 +157,17 @@
             color: #ff0000b7;
             width: 50px;
             height: 50px;
-            background-color: rgb(160, 160, 160);
-            border: 5px outset #470000;
+            background-color: transparent;
+            border: #ff0000b7 solid 4px;;
             border-radius: 50%;
-            margin: 0 0 0 40px;
+            margin: 0 0 0 40%;
             position: absolute;
             top: 50%;
             -ms-transform: translateY(-50%);
             transform: translateY(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .btn-delete-element:hover {

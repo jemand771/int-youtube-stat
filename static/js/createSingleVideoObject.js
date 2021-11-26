@@ -1,10 +1,9 @@
-function createSingleVideoContainer(id, title, thumbnail, views, likes, duration) {
+function createSingleVideoContainer(id, title, thumbnail, views, likes, duration, channelName, channelID) {
     let videoContainer = document.getElementsByClassName("scroll-box")[0];
     // create a container for a single video
     let singleVideoContainer = document.createElement("section");
     singleVideoContainer.setAttribute("class", "single-video-container");
     singleVideoContainer.setAttribute("id", id);
-    // TODO likes/views entfernen wenn Zahlen übergeben werden
     singleVideoContainer.setAttribute("likes", likes);
     singleVideoContainer.setAttribute("views", views);
     videoContainer.appendChild(singleVideoContainer);
@@ -21,12 +20,21 @@ function createSingleVideoContainer(id, title, thumbnail, views, likes, duration
     // title as clickable URL
     let videoTitleContainer = document.createElement("h3");
     singleVideoStats.appendChild(videoTitleContainer);
-    let videoTitleUrl = document.createElement("a");
-    videoTitleUrl.setAttribute("href", ('https://www.youtube.com/watch?v='+id));
-    videoTitleUrl.setAttribute("target", "_blank");
-    videoTitleUrl.setAttribute("rel", "noopener noreferrer");
-    videoTitleUrl.innerHTML = title;
-    videoTitleContainer.appendChild(videoTitleUrl);
+    let singleVideoTitleUrl = document.createElement("a");
+    singleVideoTitleUrl.setAttribute("href", ('https://www.youtube.com/watch?v='+id));
+    singleVideoTitleUrl.setAttribute("target", "_blank");
+    singleVideoTitleUrl.setAttribute("rel", "noopener noreferrer");
+    singleVideoTitleUrl.innerHTML = title;
+    videoTitleContainer.appendChild(singleVideoTitleUrl);
+    // channel name as clickable URL
+    let singleVideoChannelContainer = document.createElement("h5");
+    singleVideoStats.appendChild(singleVideoChannelContainer);
+    let singleVideoChannelUrl = document.createElement("a");
+    singleVideoChannelUrl.setAttribute("href", ("https://www.youtube.com/channel/" + channelID));
+    singleVideoChannelUrl.setAttribute("target", "_blank");
+    singleVideoChannelUrl.setAttribute("rel", "noopener noreferrer");
+    singleVideoChannelUrl.innerHTML = channelName;
+    singleVideoChannelContainer.appendChild(singleVideoChannelUrl);
     // Likes
     let videoLikes = document.createElement("p");
     videoLikes.innerHTML = "Likes: " + likes;
@@ -50,9 +58,4 @@ function createSingleVideoContainer(id, title, thumbnail, views, likes, duration
     delBut.appendChild(deleteIcon);
     singleVideoContainer.appendChild(delBut);
 
-}
-//TODO add delete all elements button
-function removeChildElement(childElement) {
-    childElement.parentElement.remove();
-    updateStatistics()
 }
