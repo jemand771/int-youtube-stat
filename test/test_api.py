@@ -144,4 +144,4 @@ class TestHttpApi(ApiTestBase):
         ))
         self.assertEqual(r['duration'], '10:00:01')
         self.assertEqual(r['view_count'], '123')
-        self.assertEqual(r['like_count'], '123,4M')
+        self.assertEqual(r['like_count'], '123,4Mio')
