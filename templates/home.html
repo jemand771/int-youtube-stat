@@ -30,7 +30,7 @@
         }
 
         .div1 {
-            background-color: rgb(228, 228, 228)
+            background-color: rgb(228, 228, 228);
         }
 
         a:link {
@@ -68,18 +68,18 @@
 
         .span-input {
             background-color: rgb(197, 197, 197);
-            border-color: rgb(197, 197, 197)
+            border-color: rgb(197, 197, 197);
         }
 
         p {
-            color: rgb(0, 0, 0);
             margin: unset;
             font-size: 1.4em;
+            vertical-align: middle;
         }
 
         html {
             scrollbar-color: #851010 #530505;
-            scrollbar-width: thin
+            scrollbar-width: thin;
         }
 
         .statistic {
@@ -95,27 +95,33 @@
             background-image: linear-gradient(to right, #ff3ef5 5%, #dc68ff 15%, #5c5fff 33%, #48e1f5 44%, #58ff52 55%, #fffc5e 66%, #ffbd2e 77%, #ff5151 88%,#ff3ef5 100%);
         }
 
-        i {
-            color: rgb(255, 0, 0)
+        .i-big {
+            color: rgb(255, 0, 0);
+        }
+
+        .i-small {
+            color: black;
+            font-size: 1.2em;
+            vertical-align: sub;
         }
 
         .i_header {
-            font-size: 72px
+            font-size: 72px;
         }
 
         .i_input {
-            font-size: 38px
+            font-size: 38px;
         }
 
         .label-custom {
             background-color: rgb(197, 197, 197);
-            border-color: rgb(197, 197, 197)
+            border-color: rgb(197, 197, 197);
         }
 
         .input-custom {
             background-color: rgb(255, 255, 255);
             border-color: rgb(160, 160, 160);
-            color: rgb(129, 129, 129)
+            color: rgb(129, 129, 129);
         }
 
         /* Franz */
@@ -191,7 +197,7 @@
 <body>
     <div class="container-fluid row mt-1">
         <div class="col-4 pt-4 text-end" >
-            <i class="material-icons i_header">video_library</i>
+            <i class="material-icons i_header i-big">video_library</i>
         </div>
         <div class="col-8 pt-2">
             <h1>YouTube Playlist Analyzer</h1>
@@ -205,7 +211,7 @@
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text span-input">
-                                <i class="material-icons i_input">video_library</i></span>
+                                <i class="material-icons i_input i-big">video_library</i></span>
                         </div>
                         <label class="form-control input-lg label-custom" for="lk">
                             <input class="form-control input-lg input-custom" type="text"
@@ -222,12 +228,12 @@
     <br>
     <div class="container-fluid statistic">
         <form class="flex">
-            <p>Statistiken:</p>
-            <p>Anzahl Videos: <label id="label-video-count">0</label></p>
-            <p>Gesamtlänge: <label id="label-combined-duration">0</label></p>
-            <p>Durchschnittliche Länge: <label id="label-average-duration">0</label></p>
-            <p>Durchschnittliche Views: <label id="label-average-views">0</label></p>
-            <p>Durchschnittliche Bewertung: <label id="label-average-likes">0</label></p>
+            <h4>Statistiken:</h4>
+            <p><i class="material-icons i-small">functions</i> Anzahl Videos: <label id="label-video-count">0</label></p>
+            <p><i class="material-icons i-small">schedule</i> Gesamtlänge: <label id="label-combined-duration">0</label></p>
+            <p><i class="material-icons i-small">schedule</i> Durchschnittliche Länge: <label id="label-average-duration">0</label></p>
+            <p><i class="material-icons i-small">people_alt</i> Durchschnittliche Views: <label id="label-average-views">0</label></p>
+            <p><i class="material-icons i-small">thumb_up</i> Durchschnittliche Likes: <label id="label-average-likes">0</label></p>
         </form>
             <button class="btn btn-custom mt-2" onclick="deleteAllElements()"><span class="span-custom">Alles entfernen</span></button>
     </div>
