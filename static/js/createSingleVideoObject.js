@@ -37,15 +37,15 @@ function createSingleVideoContainer(id, title, thumbnail, views, likes, duration
     singleVideoChannelContainer.appendChild(singleVideoChannelUrl);
     // Likes
     let videoLikes = document.createElement("p");
-    videoLikes.innerHTML = "Likes: " + likes;
+    videoLikes.innerHTML = "<i class=\"material-icons i-small\">thumb_up</i> Likes: " + likes;
     singleVideoStats.appendChild(videoLikes);
     // Views
     let videoViews = document.createElement("p");
-    videoViews.innerHTML = "Views: " + views;
+    videoViews.innerHTML = "<i class=\"material-icons i-small\">people_alt</i> Views: " + views;
     singleVideoStats.appendChild(videoViews);
     // Duration
     let videoDuration = document.createElement("p");
-    videoDuration.innerHTML = "Länge: " + duration;
+    videoDuration.innerHTML = "<i class=\"material-icons i-small\">schedule</i> Länge: " + duration;
     singleVideoStats.appendChild(videoDuration);
     singleVideoContainer.appendChild(singleVideoStats);
     // append delete button for the Container
