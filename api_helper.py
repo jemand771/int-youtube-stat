@@ -27,7 +27,7 @@ def format_count(num):
     num /= 10 ** (3 * magnitude)
     last_digit = int(10 * (num - int(num)))
     last_digit_fmt = f",{last_digit}" if last_digit else ""
-    return f"{int(num)}{last_digit_fmt}{['', 'K', 'M', 'B', 'T'][magnitude]}"
+    return f"{int(num)}{last_digit_fmt}{['', 'Tsd', 'Mio', 'Mrd', 'Bio'][magnitude]}"
 
 
 class TCount(int):
