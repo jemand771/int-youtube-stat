@@ -27,7 +27,7 @@ function createSingleVideoContainer(id, title, thumbnail, views, likes, duration
     singleVideoTitleUrl.innerHTML = title;
     videoTitleContainer.appendChild(singleVideoTitleUrl);
     // channel name as clickable URL
-    let singleVideoChannelContainer = document.createElement("h4");
+    let singleVideoChannelContainer = document.createElement("h5");
     singleVideoStats.appendChild(singleVideoChannelContainer);
     let singleVideoChannelUrl = document.createElement("a");
     singleVideoChannelUrl.setAttribute("href", ("https://www.youtube.com/channel/" + channelID));
