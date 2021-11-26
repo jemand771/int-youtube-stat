@@ -23,7 +23,6 @@ class VideoNotFoundException(ValueError):
 
 
 def format_count(num):
-    # TODO test? -> <-
     magnitude = int(math.log10(num)) // 3
     num /= 10 ** (3 * magnitude)
     last_digit = int(10 * (num - int(num)))
@@ -175,9 +174,6 @@ class YouTubeApi:
             channel_name=video.snippet.channelTitle,
             channel_id=video.snippet.channelId
         )
-
-    def get_video_data_multi(self, video_ids: list[str]) -> list[YouTubeVideo]:
-        return [self.get_video_data(video_id) for video_id in video_ids]
 
     def get_stats(self, video_ids: list[str]) -> YouTubeStatistics:
         videos = [self.get_video_data(video_id) for video_id in video_ids]
