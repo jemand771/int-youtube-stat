@@ -179,7 +179,7 @@ class YouTubeApi:
         videos = [self.get_video_data(video_id) for video_id in video_ids]
         total_avg_data = {
             f"{'avg' if avg else 'total'}_{prop}":
-            the_sum if not avg else the_sum // len(videos) if videos else None
+                the_sum if not avg else the_sum // len(videos) if videos else None
             for prop, attr in {
                 "duration": "duration",
                 "views": "view_count",

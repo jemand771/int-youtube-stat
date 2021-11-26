@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Oswald&effect=neon|outline|emboss|shadow-multiple|anaglyph">
+          href="https://fonts.googleapis.com/css?family=Oswald&effect=neon|outline|emboss|shadow-multiple|anaglyph">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico">
     <script src="static/js/createSingleVideoObject.js"></script>
@@ -48,7 +48,7 @@
         }
 
         .btn-custom {
-            background-image: linear-gradient(to right, #ff3ef5 5%, #dc68ff 15%, #5c5fff 33%, #48e1f5 44%, #58ff52 55%, #fffc5e 66%, #ffbd2e 77%, #ff5151 88%,#ff3ef5 100%);
+            background-image: linear-gradient(to right, #ff3ef5 5%, #dc68ff 15%, #5c5fff 33%, #48e1f5 44%, #58ff52 55%, #fffc5e 66%, #ffbd2e 77%, #ff5151 88%, #ff3ef5 100%);
             position: relative;
             padding: 3px;
             display: inline-block;
@@ -92,7 +92,7 @@
         }
 
         .span-custom:hover {
-            background-image: linear-gradient(to right, #ff3ef5 5%, #dc68ff 15%, #5c5fff 33%, #48e1f5 44%, #58ff52 55%, #fffc5e 66%, #ffbd2e 77%, #ff5151 88%,#ff3ef5 100%);
+            background-image: linear-gradient(to right, #ff3ef5 5%, #dc68ff 15%, #5c5fff 33%, #48e1f5 44%, #58ff52 55%, #fffc5e 66%, #ffbd2e 77%, #ff5151 88%, #ff3ef5 100%);
         }
 
         .i-big {
@@ -131,7 +131,7 @@
             grid-template-rows: 1fr;
             grid-column-gap: 20px;
             grid-row-gap: 20px;
-            background-color: rgb(197,197,197);
+            background-color: rgb(197, 197, 197);
             margin-top: 1%;
             padding: 20px 0 20px 0;
             position: relative;
@@ -140,7 +140,7 @@
         .single-video-thumbnail {
             grid-area: 1 / 1 / 2 / 2;
             margin: 5% auto;
-            max-width:350px;
+            max-width: 350px;
         }
 
         .single-video-stats {
@@ -198,51 +198,55 @@
 </head>
 
 <body>
-    <div class="container-fluid row mt-1">
-        <div class="col-4 pt-4 text-end" >
-            <i class="material-icons i_header i-big">video_library</i>
-        </div>
-        <div class="col-8 pt-2">
-            <h1>YouTube Playlist Analyzer</h1>
-        </div>
+<div class="container-fluid row mt-1">
+    <div class="col-4 pt-4 text-end">
+        <i class="material-icons i_header i-big">video_library</i>
     </div>
+    <div class="col-8 pt-2">
+        <h1>YouTube Playlist Analyzer</h1>
+    </div>
+</div>
 
-    <div class="container-fluid sticky-top pt-3 mt-2 div1">
-        <form class="d-flex" action="/video_data/">
-            <div class="container-fluid row">
-                <div class="col-9 text-start">
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
+<div class="container-fluid sticky-top pt-3 mt-2 div1">
+    <form class="d-flex" action="/video_data/">
+        <div class="container-fluid row">
+            <div class="col-9 text-start">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
                             <span class="input-group-text span-input">
                                 <i class="material-icons i_input i-big">video_library</i></span>
-                        </div>
-                        <label class="form-control input-lg label-custom" for="lk">
-                            <input class="form-control input-lg input-custom" type="text"
-                                placeholder="Hier Link eingeben" id="lk" name="path">
-                        </label>
                     </div>
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-custom" type="submit"><span class="span-custom">Senden</span></button>
+                    <label class="form-control input-lg label-custom" for="lk">
+                        <input class="form-control input-lg input-custom" type="text"
+                               placeholder="Hier Link eingeben" id="lk" name="path">
+                    </label>
                 </div>
             </div>
-        </form>
-    </div>
-    <br>
-    <div class="container-fluid statistic">
-        <form class="flex">
-            <h4>Statistiken:</h4>
-            <p><i class="material-icons i-small">functions</i> Anzahl Videos: <label id="label-video-count">0</label></p>
-            <p><i class="material-icons i-small">schedule</i> Gesamtlänge: <label id="label-combined-duration">0</label></p>
-            <p><i class="material-icons i-small">schedule</i> Durchschnittliche Länge: <label id="label-average-duration">0</label></p>
-            <p><i class="material-icons i-small">people_alt</i> Durchschnittliche Views: <label id="label-average-views">0</label></p>
-            <p><i class="material-icons i-small">thumb_up</i> Durchschnittliche Likes: <label id="label-average-likes">0</label></p>
-        </form>
-            <button class="btn btn-custom mt-2" onclick="deleteAllElements()"><span class="span-custom">Alles entfernen</span></button>
-    </div>
-    <br>
-   <div class="container-float scroll-box">
-    </div>
+            <div class="col-3">
+                <button class="btn btn-custom" type="submit"><span class="span-custom">Senden</span></button>
+            </div>
+        </div>
+    </form>
+</div>
+<br>
+<div class="container-fluid statistic">
+    <form class="flex">
+        <h4>Statistiken:</h4>
+        <p><i class="material-icons i-small">functions</i> Anzahl Videos: <label id="label-video-count">0</label></p>
+        <p><i class="material-icons i-small">schedule</i> Gesamtlänge: <label id="label-combined-duration">0</label></p>
+        <p><i class="material-icons i-small">schedule</i> Durchschnittliche Länge: <label
+                id="label-average-duration">0</label></p>
+        <p><i class="material-icons i-small">people_alt</i> Durchschnittliche Views: <label
+                id="label-average-views">0</label></p>
+        <p><i class="material-icons i-small">thumb_up</i> Durchschnittliche Likes: <label
+                id="label-average-likes">0</label></p>
+    </form>
+    <button class="btn btn-custom mt-2" onclick="deleteAllElements()"><span class="span-custom">Alles entfernen</span>
+    </button>
+</div>
+<br>
+<div class="container-float scroll-box">
+</div>
 </body>
 <script src="static/js/getResponseFromGETRequest.js"></script>
 </html>

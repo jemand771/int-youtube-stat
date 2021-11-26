@@ -135,7 +135,7 @@ class TestHttpApi(ApiTestBase):
         r = encoder.default(YouTubeVideo(
             id="aaaaaaaaaaa",
             title="video title",
-            duration=10*60*60 + 1,
+            duration=10 * 60 * 60 + 1,
             thumbnail_url="https://foo.bar",
             view_count=123,
             like_count=123_456_789,

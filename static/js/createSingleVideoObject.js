@@ -21,7 +21,7 @@ function createSingleVideoContainer(id, title, thumbnail, views, likes, duration
     let videoTitleContainer = document.createElement("h3");
     singleVideoStats.appendChild(videoTitleContainer);
     let singleVideoTitleUrl = document.createElement("a");
-    singleVideoTitleUrl.setAttribute("href", ('https://www.youtube.com/watch?v='+id));
+    singleVideoTitleUrl.setAttribute("href", ('https://www.youtube.com/watch?v=' + id));
     singleVideoTitleUrl.setAttribute("target", "_blank");
     singleVideoTitleUrl.setAttribute("rel", "noopener noreferrer");
     singleVideoTitleUrl.innerHTML = title;
